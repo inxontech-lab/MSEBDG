@@ -31,3 +31,4 @@ D:\Darbar\Darbar applications\Shah Emdadia Blood Donors Group\MSEBDG\MSEBDGCP\ob
 D:\Darbar\Darbar applications\Shah Emdadia Blood Donors Group\MSEBDG\MSEBDGCP\obj\Debug\net8.0\MSEBDGCP.pdb
 D:\Darbar\Darbar applications\Shah Emdadia Blood Donors Group\MSEBDG\MSEBDGCP\obj\Debug\net8.0\MSEBDGCP.genruntimeconfig.cache
 D:\Darbar\Darbar applications\Shah Emdadia Blood Donors Group\MSEBDG\MSEBDGCP\obj\Debug\net8.0\ref\MSEBDGCP.dll
+D:\Darbar\Darbar applications\Shah Emdadia Blood Donors Group\MSEBDG\MSEBDGCP\obj\Debug\net8.0\MSEBDGCP.sourcelink.json
