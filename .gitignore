@@ -1,18 +1,15 @@
-# Build folders
+# Visual Studio / .NET
+.vs/
 **/bin/
 **/obj/
 
-# Visual Studio
-.vs/
+# User-specific files
 *.user
 *.suo
-
-# Node (if any)
-node_modules/
 
 # Logs
 *.log
 
 # OS files
-.DS_Store
 Thumbs.db
+.DS_Store
