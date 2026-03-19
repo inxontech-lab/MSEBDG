@@ -1,0 +1,6 @@
+@MSEBDGAPI_HostAddress = http://localhost:5007
+
+GET {{MSEBDGAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

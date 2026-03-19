@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="DataAccess/DataAccess.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="MSEBDGAPI/MSEBDGAPI.csproj" />
+  <Project Path="MSEBDGCP/MSEBDGCP.csproj" />
+  <Project Path="MSEBDGWebsite/MSEBDGWebsite.csproj" />
+  <Project Path="Shared/Shared.csproj" />
+</Solution>
