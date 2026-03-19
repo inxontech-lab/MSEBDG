@@ -1,0 +1,18 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Node (if any)
+node_modules/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
