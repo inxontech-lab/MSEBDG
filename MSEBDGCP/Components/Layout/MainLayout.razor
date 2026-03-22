@@ -1,6 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
+<HeadContent>
+    <link href="css/app.css" rel="stylesheet" />
+</HeadContent>
+
+<RadzenComponents @rendermode="InteractiveAuto" />
+@* <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
@@ -20,4 +25,98 @@
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
-</div>
+</div> *@
+<RadzenComponents @rendermode="RenderMode.InteractiveServer" />
+
+<RadzenLayout @rendermode="RenderMode.InteractiveServer">
+    <RadzenHeader>
+        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenColumn Size="10">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="height: 60px; padding: 0 1rem;">
+                    <RadzenSidebarToggle Click="@SidebarToggleClick" Style="color: var(--rz-text-color);" />
+                    <img src="images/app_logo.jpeg" alt="Logo"
+                         style="height: 40px; margin-left: 12px; margin-right: 12px;" />
+                    <RadzenText Text="Maizbhandari Shah Emdadia Blood Donors Group" 
+                                TextStyle="Radzen.Blazor.TextStyle.Subtitle1"
+                                Style="color: var(--rz-text-color);" />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="2">
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                    <RadzenProfileMenu>
+                        <ChildContent>
+                            <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                        </ChildContent>
+                        <Template>
+                        </Template>
+                    </RadzenProfileMenu>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
+    <RadzenBody>
+        @Body
+    </RadzenBody>
+
+    <RadzenSidebar Expanded="@sidebarExpanded">
+        <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6">
+            <RadzenText Text="MSEBDG Campaign" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" Style="color:#F9F9F9" />
+        </RadzenStack>
+        <RadzenPanelMenu Multiple="true">
+            <RadzenPanelMenuItem Text="Dashboard" Path="/dashboard" Icon="dashboard" IconColor="@Colors.Info" />
+            @* <RadzenPanelMenuItem Text="Master Forms" Icon="label" IconColor="@Colors.Primary">
+                <RadzenPanelMenuItem Text="User" Path="/User" Icon="account_circle" IconColor="@Colors.Success" />
+            </RadzenPanelMenuItem> *@
+            <RadzenPanelMenuItem Text="Transactions" Icon="label" IconColor="@Colors.Primary">
+                <RadzenPanelMenuItem Text="New Campaign" Path="/camp-add" Icon="add" IconColor="@Colors.Success" />
+                <RadzenPanelMenuItem Text="Grouping Registration" Path="/beneficiary-registration" Icon="assignment" IconColor="@Colors.Success" />
+            </RadzenPanelMenuItem>
+            
+            <RadzenPanelMenuItem Text="Reports" Icon="assignment" IconColor="@Colors.Primary">
+                @*<RadzenPanelMenuItem Text="Customer Credit Summary" Path="/customer-credit-summary" Icon="credit_card"
+                                     IconColor="@Colors.WarningLight" />
+                <RadzenPanelMenuItem Text="Customer Credit Statement" Path="/customer-credit-statement" Icon="credit_card"
+                                     IconColor="@Colors.WarningDark" />
+                <RadzenPanelMenuItem Text="Location" Path="/LocationList" Icon="account_circle" /> *@
+            </RadzenPanelMenuItem>
+        </RadzenPanelMenu>
+        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
+            <RadzenText Text="Application Name v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+            <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+        </RadzenStack>
+    </RadzenSidebar>
+</RadzenLayout>
+
+@code {
+    [Inject]
+    protected IJSRuntime JSRuntime { get; set; }
+    [Inject]
+    protected NavigationManager NavigationManager { get; set; }
+    [Inject]
+    protected DialogService DialogService { get; set; }
+    [Inject]
+    protected TooltipService TooltipService { get; set; }
+    [Inject]
+    protected ContextMenuService ContextMenuService { get; set; }
+    [Inject]
+    protected NotificationService NotificationService { get; set; }
+    private bool sidebarExpanded = true;
+
+    void SidebarToggleClick()
+    {
+        sidebarExpanded = !sidebarExpanded;
+    }
+
+    protected void ProfileMenuClick(RadzenProfileMenuItem args)
+    {
+        if (args.Value == "Logout")
+        {
+            NavigationManager.NavigateTo("Account/Logout", true);
+        }
+    }
+
+    void NavigateToPage(string pageUrl)
+    {
+        NavigationManager.NavigateTo(pageUrl, true);
+    }
+}

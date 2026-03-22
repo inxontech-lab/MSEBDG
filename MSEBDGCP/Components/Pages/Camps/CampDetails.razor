@@ -1,0 +1,144 @@
+﻿@page "/camp-add"
+
+<h3>Add Campaign</h3>
+
+<RadzenCard Style="border-top-left-radius: 20px;background-color:#f3f6f9;
+                    border-top-right-radius: 20px;
+                    border-bottom-right-radius: 20px;
+                    border-bottom-left-radius:20px;box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); margin-top:15px;margin-bottom:15px">
+    <RadzenTemplateForm Data="@CampDetail" TItem="Domain.CampsModels.DBModels.CampDetail" Submit="@SaveCamp">
+
+        <RadzenRow Style="padding-bottom:10px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenTextBox @bind-Value="CampDetail.CampNameBn" Name="CampNameBn" Placeholder="Camp Name (Bn)*"
+                               Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                <RadzenRequiredValidator Component="CampNameBn" Text="Camp name Bangla is required" Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenTextBox @bind-Value="CampDetail.CampNameEn" Name="CampNameEn" Placeholder="Camp Name (Eng)"
+                               Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenDropDown @bind-Value="CampDetail.CampTypeId"
+                                Data="@CampTypeList"
+                                TextProperty="CampTypeName"
+                                ValueProperty="Id"
+                                Placeholder="Select Camp Type *"
+                                Style="width:100%"
+                                AllowClear=true
+                                Name="CampType" />
+                <RadzenRequiredValidator Component="CampType" Text="Camp type is required" Style="position: relative" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Style="padding-bottom:10px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenDropDown @bind-Value="CampDetail.Country"
+                                Data="@CountryList"
+                                TextProperty="CountryName"
+                                ValueProperty="CountryId"
+                                Placeholder="Select Country *"
+                                Style="width:100%"
+                                AllowClear=true
+                                Name="Country" />
+                <RadzenRequiredValidator Component="Country" Text="Country name is required" Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenDatePicker @bind-Value="CampDetail.CampDate" DateFormat="dd-MM-yyyy"
+                                  Placeholder="Camp Date (DD-MM-YYYY)*" Style="width:100%" Name="CampDate"
+                                  Min="@DateTime.Today" />
+                <RadzenRequiredValidator Component="CampDate" Text="Camp date is required" Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenTextBox @bind-Value="CampDetail.CampLocationBn" Name="CampLocationBn" Placeholder="Camp Location (Bn)*"
+                               Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                <RadzenRequiredValidator Component="CampLocationBn" Text="Cam location Bngla is required" Style="position: relative" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Style="padding-bottom:10px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenDropDown @bind-Value="CampDetail.SecommitteeId"
+                                Data="@SECommitteeList"
+                                TextProperty="SecommitteeNameBn"
+                                ValueProperty="Id"
+                                Placeholder="Select SE Committee"
+                                Style="width:100%"
+                                AllowClear=true
+                                Name="SeCommittee" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="2">
+                <RadzenTextBox @bind-Value="CampDetail.Coordinator" Name="Coordinator" Placeholder="Camp coordinator"
+                               Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="2">
+                <RadzenTextBox @bind-Value="CampDetail.Phone1" Name="Phone" Placeholder="Phone / Mobile"
+                               Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Active" Component="active" Style="margin-right:10px"/>
+                <RadzenSwitch @bind-Value=@activeFlag InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
+            </RadzenColumn>
+            @* <RadzenColumn Size="12" SizeMD="4">
+                <RadzenColumn Size="12" SizeMD="2" class="rz-text-align-start rz-text-align-md-end">
+                    <RadzenLabel Text="Active" Component="active" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenSwitch @bind-Value=@activeFlag InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Switch value" }})" />
+                </RadzenColumn>
+            </RadzenColumn> *@
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Style="text-align:right">
+                <div>
+                    <RadzenButton Text="Submit" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" />
+                    <RadzenButton Text="Clear" Icon="autorenew" Click="ClearForm"
+                                  Shade="Shade.Lighter" ButtonStyle="ButtonStyle.Secondary" />
+                </div>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenTemplateForm>
+</RadzenCard>
+
+<RadzenDataGrid @ref=CampDetailsDTO AllowFiltering="true" AllowColumnResize="true" PageSize="5"
+                AllowPaging="true" AllowSorting="true" class="card"
+                Data="@CampDetailsList" TItem="Domain.CampsModels.RespDTO.CampDetailsDTO">
+    <Columns>
+        <RadzenDataGridColumn Property="@nameof(Domain.CampsModels.RespDTO.CampDetailsDTO.CampNameBn)" Title="Name" Filterable="true" TextAlign="TextAlign.Left" />
+        <RadzenDataGridColumn Property="@nameof(Domain.CampsModels.RespDTO.CampDetailsDTO.CampTypeName)" Title="Type" TextAlign="TextAlign.Left" />
+        <RadzenDataGridColumn Property="@nameof(Domain.CampsModels.RespDTO.CampDetailsDTO.CampLocationBn)" Title="Location" Filterable="true" TextAlign="TextAlign.Left" />
+        <RadzenDataGridColumn TItem="Domain.CampsModels.RespDTO.CampDetailsDTO"
+                              Property="CampDate"
+                              Title="Date" Filterable="true">
+
+            <Template Context="data">
+                @data.CampDate?.ToString("dd-MM-yyyy")
+            </Template>
+
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Title="Is Active">
+            <Template Context="CampDetailsList">
+                @if (CampDetailsList.Active == 1)
+                {
+                    <RadzenBadge Shade="Shade.Darker" BadgeStyle="BadgeStyle.Success" Text="Active" />
+                }
+                else
+                {
+                    <RadzenBadge Shade="Shade.Darker" BadgeStyle="BadgeStyle.Danger" Text="Inactive" />
+                }
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Title="Edit" Filterable="false" Sortable="false" Width="100px">
+            <Template Context="CampDetailsList">
+                <RadzenButton Size=ButtonSize.ExtraSmall Disabled="false"
+                              Click=@(args => OpenRecord(@CampDetailsList.Id))
+                              Icon="edit" Style="background-color:#193e91" class="buttonStyle" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+
+}

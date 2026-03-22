@@ -1,0 +1,314 @@
+﻿@page "/beneficiary-registration"
+@using Radzen
+@using Radzen.Blazor
+@using System.Globalization
+@using Domain.CampsModels.DBModels
+@using Domain.CampsModels.ReqDTO
+
+
+<PageTitle>Beneficiary Entry</PageTitle>
+
+<RadzenTemplateForm Data="@ReqDTO" TItem="BeneficiaryDetailsReqDTO" Submit="@SaveBeneficiary">
+    <RadzenText Text="Blood Grouping Registration"
+    TextStyle="Radzen.Blazor.TextStyle.Subtitle2" 
+    Style="font-size:x-large; color: var(--rz-text-color);" />
+
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenDropDown @bind-Value="ReqDTO.Beneficiary.CampId"
+                            Data="@_CampDetailsList"
+                            TextProperty="CampNameBn"
+                            ValueProperty="Id"
+                            Placeholder="Select Camp *"
+                            Style="width:100%" 
+                            AllowClear=true
+                            Name ="Camp" 
+                            Change="OnCampChange" />
+            <RadzenRequiredValidator Component="Camp" Text="Camp name is required" Style="position: relative" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="3">
+            <RadzenText Text="@campLocation"
+                        TextStyle="Radzen.Blazor.TextStyle.Subtitle1"
+                                Style="color: var(--rz-text-color);" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="3">
+            <RadzenText Text="@CampDate"
+                        TextStyle="Radzen.Blazor.TextStyle.Subtitle1"
+                        Style="color: var(--rz-text-color);" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="2" Style="text-align:right">
+            <RadzenButton Text="Update Blood Group" Icon="history"
+                          Click="@(args => UpdateBloodGroup())"
+                          ButtonStyle="ButtonStyle.Info" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenCard Style="border-top-left-radius: 20px;background-color:#f3f6f9;
+                    border-top-right-radius: 20px;
+                    border-bottom-right-radius: 20px;
+                    border-bottom-left-radius:20px;box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); margin-top:15px;margin-bottom:15px">
+        <RadzenSteps @bind-Value="@activeStepIndex">
+            <Steps>
+                <!-- STEP 1: Basic Information -->
+                <RadzenStepsItem Text="Basic Information" Step="0">
+
+                    <RadzenRow Style="padding-bottom:10px">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.MobileNumber" Name="MobileNumber" Placeholder="Mobile No*"
+                                           Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                            <RadzenRequiredValidator Component="MobileNumber" Text="Mobile number is required" Style="position: relative" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.FullName" Name="FullName" Placeholder="Full Name *"
+                                           Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                            <RadzenRequiredValidator Component="FullName" Text="Name is required" Style="position: relative" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenRow>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.FatherName" Placeholder="Father's Name"
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.MotherName" Placeholder="Mother's Name"
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow Style="padding-bottom:10px">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenDropDown @bind-Value="ReqDTO.Beneficiary.GenderId"
+                                            Data="@_GenderList"
+                                            TextProperty="GenderName"
+                                            ValueProperty="Id"
+                                            Placeholder="Select Gender *"
+                                            Style="width:100%"
+                                            AllowClear=true 
+                                            Name="Gender"/>
+                            <RadzenRequiredValidator Component="Gender" Text="Gender is required" Style="position: relative" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenRow>
+                                <RadzenColumn>
+                                    <RadzenDatePicker @bind-Value="ReqDTO.Beneficiary.DateOfBirth" DateFormat="dd-MM-yyyy"
+                                                      Placeholder="Date of Birth (DD-MM-YYYY)" Style="width:100%"
+                                                      Change="@GetAge" />
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.Age" Placeholder="Age"
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.NationalId" Placeholder="NID / BRC"
+                                           Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow Style="padding-bottom:10px">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenRow>
+                                <RadzenColumn>
+                                    <RadzenDropDown @bind-Value="ReqDTO.Beneficiary.DivisionId"
+                                                    Data="@_DivisionList"
+                                                    TextProperty="Name"
+                                                    ValueProperty="Id"
+                                                    Placeholder="Select Division"
+                                                    Style="width:100%"
+                                                    Change="@(args => GetDistrict(args))"
+                                                    AllowClear=true />
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenDropDown @bind-Value="ReqDTO.Beneficiary.DistrictId"
+                                                    Data="@_DistrictList"
+                                                    TextProperty="Name"
+                                                    ValueProperty="Id"
+                                                    Placeholder="Select District"
+                                                    Style="width:100%"
+                                                    Change="@(args => GetUpazila(args))"
+                                                    AllowClear=true />
+                                </RadzenColumn>
+                            </RadzenRow>
+                                                       
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenRow>
+                                <RadzenColumn>
+                                    <RadzenDropDown @bind-Value="ReqDTO.Beneficiary.UpazilaId"
+                                                    Data="@_UpazilaList"
+                                                    TextProperty="Name"
+                                                    ValueProperty="Id"
+                                                    Placeholder="Select Thana/Upazila"
+                                                    Style="width:100%"
+                                                    Change="@(args => GetWardUnion(args))"
+                                                    AllowClear=true />
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenDropDown @bind-Value="ReqDTO.Beneficiary.WardUnionId"
+                                                    Data="@_UnionList"
+                                                    TextProperty="Name"
+                                                    ValueProperty="Id"
+                                                    Placeholder="Select Ward/Union"
+                                                    Style="width:100%"
+                                                    AllowClear=true />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+                        
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.Address" Placeholder="Address"
+                                           Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                             
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow Style="padding-bottom:10px">
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenRow>
+                                <RadzenColumn>
+                                    <RadzenDropDown @bind-Value="ReqDTO.Beneficiary.BloodGroup"
+                                                    Data="@bloodGroupList"
+                                                    TextProperty="BlodGroupNameEn"
+                                                    ValueProperty="BloodGroupId"
+                                                    Placeholder="Select Blood Group"
+                                                    Style="width:100%" />
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.HeightFeet" Placeholder="Height in Feet"
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;"/>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenRow>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.HeightInch" Placeholder="Height in Inch"
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.HeightInCm" Placeholder="Height in cm"
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="4">
+                            <RadzenRow>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.Weight" Placeholder="Weight in KG"
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenTextBox @bind-Value="ReqDTO.Beneficiary.Bmi" Placeholder="BMI" ReadOnly=true
+                                                   Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenColumn>
+                    </RadzenRow>
+
+                    <RadzenRow Style="padding-bottom:10px">
+                        
+                    </RadzenRow>
+                </RadzenStepsItem>
+
+                @if (QuestionCategoryList != null && QuestionCategoryList.Any())
+                {
+                    int i=1;
+                    @foreach (var category in QuestionCategoryList)
+                    {
+                         <RadzenStepsItem Text="@category.CategoryName" Step="@i">
+                            @foreach (var question in QuestionList.Where(x => x.CategoryId == category.CategoryId))
+                            {
+                                var ans = ReqDTO.BeneficiaryQuestionAnswers.First(a => a.QuestionId == question.QuestionId);
+                                <RadzenRow RowGap="0.4em" Style="margin-bottom: 1em;">
+                                    <RadzenColumn Size="6">
+                                        <RadzenLabel>@question.QuestionTextBn : </RadzenLabel>
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="6" Style="text-align:left;">
+                                        @if (question.QuestionType == "YesNo")
+                                        {
+                                            <RadzenRadioButtonList TValue="int"
+                                                                   @bind-Value="@ans.AnswerYesNo"
+                                                                   Orientation="Orientation.Horizontal"
+                                                                   Style="margin-left:10px;">
+                                                <Items>
+                                                    <RadzenRadioButtonListItem Text="Yes" Value="1" />
+                                                    <RadzenRadioButtonListItem Text="No" Value="2" />
+                                                </Items>
+                                            </RadzenRadioButtonList>
+                                        }
+                                        else if (question.QuestionType == "Text")
+                                        {
+                                            <RadzenTextBox @bind-Value="@ans.AnswerText"
+                                                           Placeholder="Enter your answer"
+                                                           Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                        }
+                                        else if (question.QuestionType == "Number")
+                                        {
+                                            <RadzenTextBox @bind-Value="@ans.AnswerText"
+                                                           Placeholder="Enter your answer"
+                                                           onkeypress="return isNumberKey(event)"
+                                                           Style="height: 30px !important; font-size: 0.85rem !important;width:100%;" />
+                                        }
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            }
+                         </RadzenStepsItem>
+                         i++;
+                    }
+                }
+            </Steps>
+        </RadzenSteps>
+    </RadzenCard>
+
+    <RadzenRow>
+        <RadzenColumn Style="text-align:right">
+            <div>
+                <RadzenButton Text="Submit" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit"/>
+                @*   <RadzenButton Text="Save" Icon="description"
+                        ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" /> *@
+                <RadzenButton Text="Clear" Icon="autorenew" Click="ClearForm"
+                                Shade="Shade.Lighter" ButtonStyle="ButtonStyle.Secondary" />
+            </div>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenTemplateForm>
+
+
+@code {
+    private int activeTabIndex = 0;
+    private int activeStepIndex = 0;
+    private int selectedCampId;
+
+    private string? campLocation = "";
+    private string? CampDate = "";
+
+
+    private void OnSubmit()
+    {
+        // Handle form submission logic here
+    }
+
+    private void SubmitAll()
+    {
+        // Here you can merge all answers and send to API
+        NotificationService.Notify(NotificationSeverity.Success, "Submitted", "Beneficiary registration completed!");
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        //Console.WriteLine($"InvalidSubmit: {Newtonsoft.Json.JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true })}");
+    }
+}
+
+<script>
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+</script>
+

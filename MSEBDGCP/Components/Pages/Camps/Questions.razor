@@ -1,0 +1,102 @@
+﻿@page "/beneficiary-registration1"
+@using Domain.CampsModels.DBModels
+@using Shared.CampsClient.Master
+@inject QuestionMasterService QuestionMasterService
+
+<h3>Beneficiary Questions</h3>
+
+<RadzenTemplateForm TItem="List<BeneficiaryQuestionAnswer>" Data="@BeneficiaryQuestionAnswer" Submit="@SaveAnswers">
+    <ChildContent>
+        @if (QuestionList != null && QuestionList.Any())
+        {
+            @foreach (var q in QuestionList)
+            {
+                var ans = BeneficiaryQuestionAnswer.First(a => a.QuestionId == q.QuestionId);
+
+                <div class="mb-3">
+                    <label class="fw-bold">@q.QuestionTextBn</label>
+
+                    @if (q.QuestionType == "YesNo")
+                    {
+
+                        <RadzenRadioButtonList TValue="int"
+                                               @bind-Value="@ans.AnswerYesNo"
+                                               Orientation="Orientation.Horizontal"
+                                               Style="margin-left:10px;">
+                            <Items>
+                                <RadzenRadioButtonListItem Text="Yes" Value="1" />
+                                <RadzenRadioButtonListItem Text="No" Value="2" />
+                            </Items>
+                        </RadzenRadioButtonList>
+
+                        <RadzenRadioButtonList @bind-Value="@ans.AnswerText"
+                                               TValue="string"
+                                               Data="@(new List<string?> { "Yes", "No" })" />
+
+                    }
+                    else if (q.QuestionType == "Text")
+                    {
+                        <RadzenTextBox @bind-Value="@ans.AnswerText"
+                                       Placeholder="Enter your answer"
+                                       Style="width:100%" />
+                    }
+                    else if (q.QuestionType == "Number")
+                    {
+                        <RadzenTextBox @bind-Value="@ans.AnswerText"
+                                       Placeholder="Enter your answer"
+                                       onkeypress="return isNumberKey(event)"
+                                       Style="width:100%" />
+                    }
+                </div>
+            }
+        }
+
+        <RadzenButton Text="Save" ButtonType="ButtonType.Submit" Style="margin-top:10px;" />
+    </ChildContent>
+</RadzenTemplateForm>
+
+@code {
+    private List<QuestionMaster> QuestionList = new();
+    private List<BeneficiaryAnswer> BeneficiaryAnswer = new();
+    List<BeneficiaryQuestionAnswer> BeneficiaryQuestionAnswer { get; set; } = new();
+    private int BeneficiaryId = 101;
+
+    protected override async Task OnInitializedAsync()
+    {
+        QuestionList = await QuestionMasterService.GetQuestionList();
+
+        BeneficiaryQuestionAnswer = QuestionList.Select(q => new BeneficiaryQuestionAnswer
+            {
+                BeneficiaryId = BeneficiaryId,
+                QuestionId = q.QuestionId,
+                AnswerText = "",
+                AnswerYesNo = 0,
+                AnswerOptionId = 0
+            }).ToList();
+    }
+
+    private async Task SaveAnswers()
+    {
+        List<BeneficiaryQuestionAnswer> ba = BeneficiaryQuestionAnswer;
+        //await AnswerService.SaveAnswersAsync(Answers);
+        //await Radzen.NotificationService.NotifyAsync("Saved successfully");
+    }
+
+    void OnAnswerChanged(int questionId, object value)
+    {
+        var ans = BeneficiaryQuestionAnswer.FirstOrDefault(a => a.QuestionId == questionId);
+        if (ans != null)
+        {
+            ans.AnswerText = value?.ToString();
+        }
+    }
+}
+
+<script>
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+</script>

@@ -1,0 +1,119 @@
+﻿
+.sidebar {
+    width: 180px !important; /* default is ~250px */
+}
+
+    .sidebar .sidebar-body {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+/* === Footer styling === */
+.app-footer {
+    padding: 12px 24px;
+    background-color: #333333;
+    color: #ffffff;
+    text-align: center;
+}
+
+/* === Card styling === */
+.card, .rz-card.card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0px 0px 5px 0px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0.30, 0.30);
+    }
+
+/* === Primary button styling === */
+.button-primary, .rz-button.button-primary {
+    background-color: #4e54c8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .button-primary:hover {
+        background-color: #3c40a4;
+    }
+
+/* === Accent colors === */
+.accent-secondary {
+    color: #8f94fb;
+}
+
+.text-success {
+    color: #4caf50;
+}
+
+.text-warning {
+    color: #ff9800;
+}
+
+.text-danger {
+    color: #f44336;
+}
+
+/* === Main content area === */
+.main-content {
+    padding: 24px;
+}
+
+/* === General typography improvements === */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 12px 0;
+    font-weight: 600;
+}
+
+p {
+    margin: 0 0 12px 0;
+    line-height: 1.6;
+}
+
+.small-dropdown {
+    height: 20px !important;
+    font-size: 0.85rem !important;
+    padding: 4px 8px !important;
+}
+
+
+.rz-inputtext,
+.rz-dropdown,
+.rz-datepicker,
+.rz-checkbox-box {
+    height: 30px !important; /* default is ~36-40px */
+    font-size: 0.85rem !important;
+}
+
+    .rz-dropdown .rz-dropdown-trigger {
+        height: 30px !important;
+    }
+
+.rz-button {
+    height: 32px !important;
+    font-size: 0.85rem !important;
+}
+
+.rz-checkbox-box {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.rz-label {
+    font-size: 0.85rem !important;
+}
+
+.rz-datatable-table > tbody > tr {
+    height: 32px !important;
+}
+
+.rz-datatable-table td {
+    padding: 4px 8px !important;
+}
