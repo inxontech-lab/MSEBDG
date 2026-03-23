@@ -1,10 +1,14 @@
 using MSEBDGWebsite.Components;
+using Shared;
+using Shared.CampsClient.Master;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddScoped<ServiceClient>();
+builder.Services.AddScoped<CampaignVolunteerService>();
 
 var app = builder.Build();
 

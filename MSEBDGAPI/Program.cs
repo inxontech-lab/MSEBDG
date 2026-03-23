@@ -22,6 +22,7 @@ builder.Services.AddScoped<GenderService>();
 builder.Services.AddScoped<BloodGroupService>();
 builder.Services.AddScoped<CampTypeService>();
 builder.Services.AddScoped<AddressService>();
+builder.Services.AddScoped<CampaignVolunteerService>();
 builder.Services.AddScoped<CampDetailsService>();
 builder.Services.AddScoped<GeneralHealthQuestService>();
 builder.Services.AddScoped<MedicalConditionService>();
