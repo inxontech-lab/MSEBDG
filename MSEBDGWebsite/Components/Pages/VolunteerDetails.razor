@@ -320,11 +320,11 @@
         builder.CloseElement();
     };
 
-    private static int GetAge(DateTime dateOfBirth)
+    private static int GetAge(DateOnly dateOfBirth)
     {
-        var today = DateTime.Today;
+        var today = DateOnly.FromDateTime(DateTime.Today);
         var age = today.Year - dateOfBirth.Year;
-        if (dateOfBirth.Date > today.AddYears(-age))
+        if (dateOfBirth > today.AddYears(-age))
         {
             age--;
         }
