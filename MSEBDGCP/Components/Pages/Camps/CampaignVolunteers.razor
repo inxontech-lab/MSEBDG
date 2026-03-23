@@ -69,13 +69,7 @@
             <RadzenDataGridColumn Property="FullNameEn" Title="Name" />
             <RadzenDataGridColumn Property="BloodGroupName" Title="Blood Group" Width="120px" />
             <RadzenDataGridColumn Property="GenderName" Title="Gender" Width="110px" />
-            <RadzenDataGridColumn Property="PhoneNumber" Title="Phone" Width="130px" />
-            <RadzenDataGridColumn Property="VillageName" Title="Village" Width="140px" />
-            <RadzenDataGridColumn Property="ThanaName" Title="Thana" Width="140px" />
             <RadzenDataGridColumn Property="ZillaName" Title="Zilla" Width="140px" />
-            <RadzenDataGridColumn Property="DivisionName" Title="Division" Width="140px" />
-            <RadzenDataGridColumn Property="BloodDonationsCount" Title="Donations" Width="110px" />
-            <RadzenDataGridColumn Property="GroupingCampParticipationCount" Title="Camps" Width="90px" />
             <RadzenDataGridColumn Title="Status" Width="100px">
                 <Template Context="item">
                     @if (item.Active)
@@ -88,7 +82,7 @@
                     }
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn Title="Actions" Width="190px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn Title="Action" Width="190px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                 <Template Context="item">
                     <RadzenButton Icon="qr_code_2" Size="ButtonSize.Small" Class="campaign-action-button-soft qr-button" Click="@(args => ViewQrCode(item))" Style="margin-right:6px;" />
                     <RadzenButton Icon="edit" Size="ButtonSize.Small" Class="campaign-action-button-soft edit-button" Click="@(args => OpenEditDialog(item.VolunteerId))" Style="margin-right:6px;" />
