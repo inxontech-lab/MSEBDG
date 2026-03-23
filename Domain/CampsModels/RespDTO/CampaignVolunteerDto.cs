@@ -27,7 +27,7 @@ public class CampaignVolunteerDto
     public string PhoneNumber { get; set; } = string.Empty;
     public string? WhatsAppNumber { get; set; }
     public string? Email { get; set; }
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
     public string? UnitCommitteeName { get; set; }
     public int BloodDonationsCount { get; set; }
     public int GroupingCampParticipationCount { get; set; }
