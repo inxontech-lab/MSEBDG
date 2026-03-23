@@ -86,7 +86,9 @@ namespace MSEBDGCP.Components.Pages.Camps
             var parameters = new Dictionary<string, object>
             {
                 [nameof(VolunteerQrDialog.VolunteerId)] = volunteer.VolunteerId,
-                [nameof(VolunteerQrDialog.VolunteerName)] = volunteer.FullNameEn
+                [nameof(VolunteerQrDialog.VolunteerName)] = volunteer.FullNameEn,
+                [nameof(VolunteerQrDialog.WhatsAppNumber)] = volunteer.WhatsAppNumber,
+                [nameof(VolunteerQrDialog.Email)] = volunteer.Email
             };
 
             await DialogService.OpenAsync<VolunteerQrDialog>("Volunteer QR Code", parameters, new DialogOptions
