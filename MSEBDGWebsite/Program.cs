@@ -9,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<ServiceClient>();
 builder.Services.AddScoped<CampaignVolunteerService>();
+builder.Services.AddScoped<CampaignVolunteerProfileService>();
 
 var app = builder.Build();
 
