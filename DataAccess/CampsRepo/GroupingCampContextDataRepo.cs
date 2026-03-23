@@ -55,7 +55,7 @@ namespace DataAccess.CampsRepo
                    join division in _MsebdgcampsContext.Divisions on volunteer.DivisionId equals division.Id
                    join district in _MsebdgcampsContext.Districts on volunteer.ZillaId equals district.Id
                    join upazila in _MsebdgcampsContext.Upazilas on volunteer.ThanaId equals upazila.Id
-                   join union in _MsebdgcampsContext.Unions on volunteer.VillageId equals union.Id
+                   join union in _MsebdgcampsContext.Unions on volunteer.VillageId equals union.Id into unionGroup
                    select new CampaignVolunteerDto
                    {
                        VolunteerId = volunteer.VolunteerId,
@@ -76,7 +76,7 @@ namespace DataAccess.CampsRepo
                        ThanaId = volunteer.ThanaId,
                        ThanaName = upazila.Name,
                        VillageId = volunteer.VillageId,
-                       VillageName = union.Name,
+                       VillageName = unionGroup.Select(u => u.Name).FirstOrDefault() ?? string.Empty,
                        PostOfficeName = volunteer.PostOfficeName,
                        PhoneNumber = volunteer.PhoneNumber,
                        WhatsAppNumber = volunteer.WhatsAppNumber,
@@ -651,8 +651,7 @@ namespace DataAccess.CampsRepo
                     volunteer.BloodGroupId <= 0 ||
                     volunteer.DivisionId <= 0 ||
                     volunteer.ZillaId <= 0 ||
-                    volunteer.ThanaId <= 0 ||
-                    volunteer.VillageId <= 0)
+                    volunteer.ThanaId <= 0)
                 {
                     _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.MANDATORY_FIELD_MISSING;
                     _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = ConfigClass.MANDATORY_FIELD_MISSING_MESSAGE;
@@ -690,8 +689,7 @@ namespace DataAccess.CampsRepo
                     volunteer.BloodGroupId <= 0 ||
                     volunteer.DivisionId <= 0 ||
                     volunteer.ZillaId <= 0 ||
-                    volunteer.ThanaId <= 0 ||
-                    volunteer.VillageId <= 0)
+                    volunteer.ThanaId <= 0)
                 {
                     _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.MANDATORY_FIELD_MISSING;
                     _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = ConfigClass.MANDATORY_FIELD_MISSING_MESSAGE;
