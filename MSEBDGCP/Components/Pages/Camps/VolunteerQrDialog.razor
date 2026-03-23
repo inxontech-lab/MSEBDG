@@ -122,7 +122,7 @@
             <a href="@detailsUrl" target="_blank" rel="noopener noreferrer" class="volunteer-qr-link">@detailsUrl</a>
         </div>
 
-        <div class="volunteer-qr-action-grid">
+        @* <div class="volunteer-qr-action-grid">
             @if (!string.IsNullOrWhiteSpace(WhatsAppNumber))
             {
                 <div class="volunteer-qr-share-card">
@@ -138,7 +138,7 @@
                 <div class="volunteer-qr-share-card">
                     <h6>Email</h6>
                     <div class="volunteer-qr-share-buttons">
-                        <RadzenButton Text="Compose Email" Icon="mail" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareByEmailAsync" />
+                        <RadzenButton Text="Email" Icon="mail" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareByEmailAsync" />
                     </div>
                 </div>
             }
@@ -148,11 +148,11 @@
                 <div class="volunteer-qr-share-card">
                     <h6>QR image</h6>
                     <div class="volunteer-qr-share-buttons">
-                        <RadzenButton Text="Share QR Image" Icon="ios_share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareQrImageAsync" />
+                        <RadzenButton Text="Share Image" Icon="ios_share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareQrImageAsync" />
                     </div>
                 </div>
             }
-        </div>
+        </div> *@
     }
 </div>
 
