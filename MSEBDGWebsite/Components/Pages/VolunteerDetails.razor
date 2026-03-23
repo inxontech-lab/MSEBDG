@@ -325,7 +325,7 @@
             volunteer = await LoadVolunteerAsync(volunteerId);
             if (volunteer != null)
             {
-                qrCodeDataUri = BuildQrCodeDataUri(NavigationManager.Uri);
+                qrCodeDataUri = BuildQrCodeDataUri(BuildVolunteerDetailsUrl(volunteerId));
             }
             else
             {
@@ -450,6 +450,18 @@
         return $"data:{(string.IsNullOrWhiteSpace(photoMimeType) ? "image/jpeg" : photoMimeType)};base64,{photoBase64}";
     }
 
+    private string BuildVolunteerDetailsUrl(int volunteerId)
+    {
+        var detailsPath = VolunteerPublicLinkEncoder.BuildVolunteerDetailsPath(volunteerId, Configuration);
+        var publicBaseAddress = Configuration["PublicUrls:VolunteerWebsiteBaseAddress"]?.TrimEnd('/');
+
+        if (!string.IsNullOrWhiteSpace(publicBaseAddress))
+        {
+            return $"{publicBaseAddress}{detailsPath}";
+        }
+
+        return NavigationManager.ToAbsoluteUri(detailsPath).AbsoluteUri;
+    }
 
     private static string BuildQrCodeDataUri(string url)
     {
