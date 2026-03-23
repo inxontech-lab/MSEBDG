@@ -117,3 +117,47 @@ p {
 .rz-datatable-table td {
     padding: 4px 8px !important;
 }
+.msebdg-action-button,
+.rz-button.msebdg-action-button {
+    background-color: #FF6F0F !important;
+    border: 1px solid #FF6F0F !important;
+    color: #ffffff !important;
+}
+
+.msebdg-action-button:hover,
+.rz-button.msebdg-action-button:hover,
+.msebdg-action-button:focus,
+.rz-button.msebdg-action-button:focus {
+    background-color: #e76005 !important;
+    border-color: #e76005 !important;
+    color: #ffffff !important;
+}
+
+.msebdg-outline-button,
+.rz-button.msebdg-outline-button {
+    background-color: transparent !important;
+    border: 1px solid #FF6F0F !important;
+    color: #FF6F0F !important;
+}
+
+.msebdg-outline-button:hover,
+.rz-button.msebdg-outline-button:hover,
+.msebdg-outline-button:focus,
+.rz-button.msebdg-outline-button:focus {
+    background-color: #FFF0E6 !important;
+    border-color: #FF6F0F !important;
+    color: #FF6F0F !important;
+}
+
+.rz-dialog .rz-dialog-footer .rz-button,
+.rz-dialog-confirm .rz-dialog-footer .rz-button {
+    background-color: #FF6F0F !important;
+    border: 1px solid #FF6F0F !important;
+    color: #ffffff !important;
+}
+
+.rz-dialog .rz-dialog-footer .rz-button:hover,
+.rz-dialog-confirm .rz-dialog-footer .rz-button:hover {
+    background-color: #e76005 !important;
+    border-color: #e76005 !important;
+}

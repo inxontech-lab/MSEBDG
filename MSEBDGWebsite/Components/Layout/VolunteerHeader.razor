@@ -1,0 +1,104 @@
+<style>
+    .volunteer-header-shell {
+        background: #062b2d;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .volunteer-brand-title {
+        max-width: 65vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+    }
+
+    .volunteer-brand-accent,
+    .volunteer-header-link-active {
+        color: #FF6F0F !important;
+    }
+
+    .volunteer-header-text,
+    .volunteer-header-link {
+        color: #fff !important;
+    }
+
+    .volunteer-header-link {
+        font-weight: 600;
+    }
+
+    .volunteer-header-link:hover,
+    .volunteer-header-link:focus {
+        color: #FF6F0F !important;
+    }
+
+    .volunteer-header-action {
+        color: #FF6F0F;
+        border: 1px solid #FF6F0F;
+        background: transparent;
+        font-weight: 600;
+    }
+
+    .volunteer-header-action:hover,
+    .volunteer-header-action:focus {
+        color: #fff;
+        border-color: #FF6F0F;
+        background: #FF6F0F;
+    }
+
+    .volunteer-header-toggle {
+        border-color: rgba(255,255,255,0.85);
+    }
+</style>
+
+<div class="container-fluid fixed-top px-0 volunteer-header-shell wow fadeIn" data-wow-delay="0.1s">
+    <div class="top-bar row gx-0 align-items-center d-flex flex-column flex-lg-row">
+        <div class="col-12 col-lg-6 px-3 px-lg-5 text-center text-lg-start mb-2 mb-lg-0">
+            <small class="volunteer-header-text">
+                <i class="fa fa-map-marker-alt me-2"></i>
+                South Khulshi, Chattogram, Bangladesh
+            </small>
+            <br class="d-lg-none">
+            <small class="ms-lg-4 volunteer-header-text">
+                <i class="fa fa-envelope me-2"></i>
+                admin@diri.org.bd
+            </small>
+        </div>
+
+        <div class="col-12 col-lg-6 px-3 px-lg-5 text-center text-lg-end">
+            <small class="volunteer-header-text">Follow us:</small>
+            <a class="volunteer-header-text ms-3" href="#">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark py-lg-0 px-lg-5 wow fadeIn" data-wow-delay="0.1s">
+        <div>
+            <a href="/" class="navbar-brand d-flex align-items-center ms-3 ms-lg-0">
+                <img src="images/cropped_circle_image.png" style="height: 50px;">
+                <img src="images/app_logo3.png" style="height: 60px;">
+                <h4 class="fw-bold m-0 volunteer-brand-title">
+                    Maizbhandari Shah Emdadia
+                    <span class="volunteer-brand-accent">Blood Donors Group</span>
+                </h4>
+            </a>
+        </div>
+
+        <button type="button" class="navbar-toggler me-4 volunteer-header-toggle" data-bs-toggle="collapse" data-bs-target="#volunteerNavbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="volunteerNavbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="/" class="nav-item nav-link volunteer-header-link">Home</a>
+                <a href="/volunteers" class="nav-item nav-link volunteer-header-link volunteer-header-link-active">Volunteers</a>
+            </div>
+            <div class="d-flex ms-lg-2 my-3 my-lg-0 justify-content-center">
+                <a class="btn py-2 px-3 volunteer-header-action" href="">
+                    Register as Donor
+                    <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
+                        <i class="fa fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>

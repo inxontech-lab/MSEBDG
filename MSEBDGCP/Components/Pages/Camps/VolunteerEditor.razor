@@ -1,12 +1,16 @@
+@using System.IO
 @using Domain.Core
 @using Domain.CampsModels.DBModels
 @using Domain.CampsModels.RespDTO
+@using Microsoft.AspNetCore.Components.Forms
 @inject Shared.CampsClient.Master.CampaignVolunteerService CampaignVolunteerService
 @inject Shared.CampsClient.Master.AddressService AddressService
 @inject Shared.CampsClient.Master.GenderService GenderService
 @inject Shared.CampsClient.Master.BloodGroupService BloodGroupService
 @inject DialogService DialogService
 @inject NotificationService NotificationService
+@inject IConfiguration Configuration
+@inject IWebHostEnvironment Environment
 
 <RadzenTemplateForm Data="@volunteer" TItem="CampaignVolunteer" Submit="SaveVolunteer">
     <RadzenStack Gap="1rem">
@@ -63,25 +67,20 @@
         </RadzenRow>
 
         <RadzenRow Gap="12px">
-            <RadzenColumn Size="12" SizeMD="3">
+            <RadzenColumn Size="12" SizeMD="4">
                 <RadzenLabel Text="Division *" />
                 <RadzenDropDown Name="DivisionId" @bind-Value="volunteer.DivisionId" Data="@divisions" TextProperty="Name" ValueProperty="Id" Change="@OnDivisionChanged" Style="width:100%" />
                 <RadzenRequiredValidator Component="DivisionId" Text="Division is required." Style="position: relative" />
             </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="3">
+            <RadzenColumn Size="12" SizeMD="4">
                 <RadzenLabel Text="Zilla *" />
                 <RadzenDropDown Name="ZillaId" @bind-Value="volunteer.ZillaId" Data="@districts" TextProperty="Name" ValueProperty="Id" Change="@OnDistrictChanged" Style="width:100%" />
                 <RadzenRequiredValidator Component="ZillaId" Text="Zilla is required." Style="position: relative" />
             </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="3">
+            <RadzenColumn Size="12" SizeMD="4">
                 <RadzenLabel Text="Thana *" />
                 <RadzenDropDown Name="ThanaId" @bind-Value="volunteer.ThanaId" Data="@upazilas" TextProperty="Name" ValueProperty="Id" Change="@OnUpazilaChanged" Style="width:100%" />
                 <RadzenRequiredValidator Component="ThanaId" Text="Thana is required." Style="position: relative" />
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="3">
-                <RadzenLabel Text="Village *" />
-                <RadzenDropDown Name="VillageId" @bind-Value="volunteer.VillageId" Data="@villages" TextProperty="Name" ValueProperty="Id" Style="width:100%" />
-                <RadzenRequiredValidator Component="VillageId" Text="Village is required." Style="position: relative" />
             </RadzenColumn>
         </RadzenRow>
 
@@ -112,8 +111,17 @@
                 <RadzenTextBox Name="UnitCommitteeName" @bind-Value="volunteer.UnitCommitteeName" Style="width:100%" />
             </RadzenColumn>
             <RadzenColumn Size="12" SizeMD="4">
-                <RadzenLabel Text="Photo Location" />
-                <RadzenTextBox Name="PhotoLocation" @bind-Value="volunteer.PhotoLocation" Style="width:100%" Placeholder="https://... or /images/..." />
+                <RadzenLabel Text="Photo Upload" />
+                <InputFile OnChange="OnPhotoSelected" accept="image/*" class="form-control" />
+                <small class="text-muted">Images are saved to @($"/{VolunteerImageRelativePath.Trim('/')}") using the volunteer id.</small>
+                @if (!string.IsNullOrWhiteSpace(selectedFileName))
+                {
+                    <div class="text-muted mt-1">Selected file: @selectedFileName</div>
+                }
+                else if (!string.IsNullOrWhiteSpace(volunteer.PhotoLocation))
+                {
+                    <div class="text-muted mt-1">Current file: @volunteer.PhotoLocation</div>
+                }
             </RadzenColumn>
         </RadzenRow>
 
@@ -135,8 +143,9 @@
         </RadzenRow>
 
         <RadzenRow JustifyContent="JustifyContent.End" Gap="8px">
-            <RadzenButton Text="Save" Icon="save" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" />
-            <RadzenButton Text="Cancel" Icon="close" ButtonStyle="ButtonStyle.Light" Click="Cancel" />
+            <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" Class="msebdg-action-button" />
+            <RadzenButton Text="Clear" Icon="autorenew" Click="ClearForm" Class="msebdg-action-button" />
+            <RadzenButton Text="Cancel" Icon="close" Click="Cancel" ButtonStyle="ButtonStyle.Light" />
         </RadzenRow>
     </RadzenStack>
 </RadzenTemplateForm>
@@ -144,18 +153,24 @@
 @code {
     [Parameter] public int VolunteerId { get; set; }
 
+    private const long MaxPhotoSizeBytes = 5 * 1024 * 1024;
+
     private CampaignVolunteer volunteer = new()
     {
         DateOfBirth = DateTime.Today.AddYears(-18),
-        Active = true
+        Active = true,
+        VillageId = 0
     };
 
     private List<Division> divisions = new();
     private List<District> districts = new();
     private List<Upazila> upazilas = new();
-    private List<Union> villages = new();
     private List<Gender> genders = new();
     private List<BloodGroup> bloodGroups = new();
+    private IBrowserFile? selectedPhoto;
+    private string? selectedFileName;
+
+    private string VolunteerImageRelativePath => Configuration["VolunteerImageStorage:RelativePath"] ?? "images/volunteers";
 
     protected override async Task OnInitializedAsync()
     {
@@ -167,6 +182,7 @@
             if (response?.RESPONSE_CODE == ConfigClass.SUCCESS && response.Volunteer != null)
             {
                 volunteer = response.Volunteer;
+                volunteer.VillageId = 0;
                 await LoadLocationChainAsync();
             }
         }
@@ -195,11 +211,6 @@
         {
             upazilas = (await AddressService.GetThanaList(volunteer.ZillaId)).UpazilaList ?? new List<Upazila>();
         }
-
-        if (volunteer.ThanaId > 0)
-        {
-            villages = (await AddressService.GetVillageList(volunteer.ThanaId)).UnionList ?? new List<Union>();
-        }
     }
 
     private async Task OnDivisionChanged(object? value)
@@ -210,7 +221,6 @@
         volunteer.VillageId = 0;
         districts = (await AddressService.GetZillaList(volunteer.DivisionId)).DistrictList ?? new List<District>();
         upazilas = new List<Upazila>();
-        villages = new List<Union>();
     }
 
     private async Task OnDistrictChanged(object? value)
@@ -219,18 +229,25 @@
         volunteer.ThanaId = 0;
         volunteer.VillageId = 0;
         upazilas = (await AddressService.GetThanaList(volunteer.ZillaId)).UpazilaList ?? new List<Upazila>();
-        villages = new List<Union>();
     }
 
-    private async Task OnUpazilaChanged(object? value)
+    private Task OnUpazilaChanged(object? value)
     {
         volunteer.ThanaId = Convert.ToInt32(value);
         volunteer.VillageId = 0;
-        villages = (await AddressService.GetVillageList(volunteer.ThanaId)).UnionList ?? new List<Union>();
+        return Task.CompletedTask;
+    }
+
+    private void OnPhotoSelected(InputFileChangeEventArgs args)
+    {
+        selectedPhoto = args.File;
+        selectedFileName = args.File.Name;
     }
 
     private async Task SaveVolunteer(CampaignVolunteer model)
     {
+        model.VillageId = 0;
+
         if (string.IsNullOrWhiteSpace(model.FullNameEn) ||
             string.IsNullOrWhiteSpace(model.FullNameBn) ||
             string.IsNullOrWhiteSpace(model.FatherNameEn) ||
@@ -242,16 +259,17 @@
             model.DivisionId <= 0 ||
             model.ZillaId <= 0 ||
             model.ThanaId <= 0 ||
-            model.VillageId <= 0 ||
             model.DateOfBirth == default)
         {
             NotificationService.Notify(NotificationSeverity.Warning, "Validation", "Please fill in all mandatory fields marked with *.");
             return;
         }
 
+        var isEdit = VolunteerId > 0;
+
         bool? confirmed = await DialogService.Confirm(
-            VolunteerId > 0 ? "Are you sure you want to update this volunteer?" : "Are you sure you want to create this volunteer?",
-            VolunteerId > 0 ? "Confirm update" : "Confirm create",
+            isEdit ? "Are you sure you want to update this volunteer?" : "Are you sure you want to create this volunteer?",
+            isEdit ? "Confirm update" : "Confirm create",
             new ConfirmOptions { OkButtonText = "Yes", CancelButtonText = "No" });
 
         if (confirmed != true)
@@ -261,13 +279,41 @@
 
         try
         {
-            var response = VolunteerId > 0
-                ? await CampaignVolunteerService.UpdateCampaignVolunteerAsync(model)
-                : await CampaignVolunteerService.SaveCampaignVolunteerAsync(model);
+            CampaignVolunteerListRespDTO? response;
+
+            if (isEdit)
+            {
+                if (selectedPhoto != null)
+                {
+                    model.PhotoLocation = await SaveVolunteerPhotoAsync(model.VolunteerId);
+                }
+
+                response = await CampaignVolunteerService.UpdateCampaignVolunteerAsync(model);
+            }
+            else
+            {
+                response = await CampaignVolunteerService.SaveCampaignVolunteerAsync(model);
+
+                if (response?.RESPONSE_CODE == ConfigClass.SUCCESS)
+                {
+                    var createdVolunteer = FindCreatedVolunteer(response.VolunteerList, model);
+                    if (createdVolunteer != null)
+                    {
+                        model.VolunteerId = createdVolunteer.VolunteerId;
+                        VolunteerId = createdVolunteer.VolunteerId;
+
+                        if (selectedPhoto != null)
+                        {
+                            model.PhotoLocation = await SaveVolunteerPhotoAsync(model.VolunteerId);
+                            response = await CampaignVolunteerService.UpdateCampaignVolunteerAsync(model);
+                        }
+                    }
+                }
+            }
 
             if (response?.RESPONSE_CODE == ConfigClass.SUCCESS)
             {
-                NotificationService.Notify(NotificationSeverity.Success, "Success", VolunteerId > 0 ? "Volunteer updated successfully." : "Volunteer created successfully.");
+                NotificationService.Notify(NotificationSeverity.Success, "Success", isEdit ? "Volunteer updated successfully." : "Volunteer created successfully.");
                 DialogService.Close(true);
             }
             else
@@ -275,10 +321,62 @@
                 NotificationService.Notify(NotificationSeverity.Error, "Save failed", response?.RESPONSE_DESCRPTION ?? "Unable to save volunteer.");
             }
         }
-        catch
+        catch (Exception ex)
         {
-            NotificationService.Notify(NotificationSeverity.Error, "Save failed", "Unable to save volunteer.");
+            NotificationService.Notify(NotificationSeverity.Error, "Save failed", $"Unable to save volunteer. {ex.Message}");
         }
+    }
+
+    private CampaignVolunteerDto? FindCreatedVolunteer(List<CampaignVolunteerDto>? volunteerList, CampaignVolunteer model)
+    {
+        return volunteerList?
+            .Where(x => x.PhoneNumber == model.PhoneNumber && x.FullNameEn == model.FullNameEn)
+            .OrderByDescending(x => x.VolunteerId)
+            .FirstOrDefault();
+    }
+
+    private async Task<string> SaveVolunteerPhotoAsync(int volunteerId)
+    {
+        if (selectedPhoto == null)
+        {
+            return volunteer.PhotoLocation ?? string.Empty;
+        }
+
+        var relativeFolder = VolunteerImageRelativePath.Trim('/').Replace('/', Path.DirectorySeparatorChar);
+        var physicalFolder = Path.Combine(Environment.WebRootPath, relativeFolder);
+        Directory.CreateDirectory(physicalFolder);
+
+        foreach (var existingFile in Directory.GetFiles(physicalFolder, $"{volunteerId}.*"))
+        {
+            File.Delete(existingFile);
+        }
+
+        var extension = Path.GetExtension(selectedPhoto.Name);
+        if (string.IsNullOrWhiteSpace(extension))
+        {
+            extension = ".jpg";
+        }
+
+        var fileName = $"{volunteerId}{extension.ToLowerInvariant()}";
+        var physicalPath = Path.Combine(physicalFolder, fileName);
+
+        await using var fileStream = new FileStream(physicalPath, FileMode.Create, FileAccess.Write, FileShare.None);
+        await selectedPhoto.OpenReadStream(MaxPhotoSizeBytes).CopyToAsync(fileStream);
+
+        return $"/{VolunteerImageRelativePath.Trim('/')}/{fileName}";
+    }
+
+    private void ClearForm()
+    {
+        selectedPhoto = null;
+        selectedFileName = null;
+        volunteer = new CampaignVolunteer
+        {
+            VolunteerId = VolunteerId,
+            DateOfBirth = DateTime.Today.AddYears(-18),
+            Active = true,
+            VillageId = 0
+        };
     }
 
     private void Cancel()
