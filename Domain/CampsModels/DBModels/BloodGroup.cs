@@ -20,4 +20,6 @@ public partial class BloodGroup
     public DateTime? ModifiedBy { get; set; }
 
     public int? ModifiedDate { get; set; }
+
+    public virtual ICollection<CampaignVolunteer> CampaignVolunteers { get; set; } = new List<CampaignVolunteer>();
 }

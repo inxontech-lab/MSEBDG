@@ -10,4 +10,6 @@ public partial class Gender
     public string? GenderName { get; set; }
 
     public int Active { get; set; }
+
+    public virtual ICollection<CampaignVolunteer> CampaignVolunteers { get; set; } = new List<CampaignVolunteer>();
 }

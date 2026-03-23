@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.CampsModels.DBModels;
 
@@ -38,7 +39,7 @@ public partial class CampaignVolunteer
 
     public string? Email { get; set; }
 
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
     public string? UnitCommitteeName { get; set; }
 
@@ -53,4 +54,8 @@ public partial class CampaignVolunteer
     public DateTime CreatedDate { get; set; }
 
     public DateTime? UpdatedDate { get; set; }
+
+    public virtual BloodGroup BloodGroup { get; set; } = null!;
+
+    public virtual Gender Gender { get; set; } = null!;
 }

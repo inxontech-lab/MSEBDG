@@ -91,7 +91,7 @@ public partial class MsebdgcampsContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=MSEBDGCamps;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=123;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=MSEBDGCamps;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=DiriWeb;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -263,18 +263,26 @@ public partial class MsebdgcampsContext : DbContext
             entity.Property(e => e.CampTypeName).HasMaxLength(50);
         });
 
-
         modelBuilder.Entity<CampaignVolunteer>(entity =>
         {
-            entity.HasKey(e => e.VolunteerId).HasName("PK_CampaignVolunteer");
+            entity.HasKey(e => e.VolunteerId).HasName("PK__Campaign__716F6F2CE6C347E9");
 
             entity.ToTable("CampaignVolunteer", "GroupCamp");
+
+            entity.HasIndex(e => e.DivisionId, "IX_CampaignVolunteer_DivisionId");
+
+            entity.HasIndex(e => e.PhoneNumber, "IX_CampaignVolunteer_PhoneNumber");
+
+            entity.HasIndex(e => e.ThanaId, "IX_CampaignVolunteer_ThanaId");
+
+            entity.HasIndex(e => e.VillageId, "IX_CampaignVolunteer_VillageId");
+
+            entity.HasIndex(e => e.ZillaId, "IX_CampaignVolunteer_ZillaId");
 
             entity.Property(e => e.Active).HasDefaultValue(true);
             entity.Property(e => e.CreatedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.DateOfBirth).HasColumnType("date");
             entity.Property(e => e.Email).HasMaxLength(120);
             entity.Property(e => e.FatherNameBn).HasMaxLength(150);
             entity.Property(e => e.FatherNameEn).HasMaxLength(150);
@@ -288,6 +296,16 @@ public partial class MsebdgcampsContext : DbContext
             entity.Property(e => e.UnitCommitteeName).HasMaxLength(200);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             entity.Property(e => e.WhatsAppNumber).HasMaxLength(20);
+
+            entity.HasOne(d => d.BloodGroup).WithMany(p => p.CampaignVolunteers)
+                .HasForeignKey(d => d.BloodGroupId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CampaignVolunteer_BloodGroup");
+
+            entity.HasOne(d => d.Gender).WithMany(p => p.CampaignVolunteers)
+                .HasForeignKey(d => d.GenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CampaignVolunteer_Gender");
         });
 
         modelBuilder.Entity<CountryMst>(entity =>
