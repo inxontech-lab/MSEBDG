@@ -5,6 +5,7 @@
 @using QRCoder
 @using Shared.VolunteerLinks
 @inject Shared.CampsClient.Master.CampaignVolunteerProfileService CampaignVolunteerProfileService
+@inject Shared.CampsClient.Master.CampaignVolunteerService CampaignVolunteerService
 @inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
 
@@ -321,16 +322,14 @@
 
         try
         {
-            var response = await CampaignVolunteerProfileService.GetVolunteerProfileAsync(volunteerId);
-            if (response?.RESPONSE_CODE == ConfigClass.SUCCESS && response.Volunteer != null)
+            volunteer = await LoadVolunteerAsync(volunteerId);
+            if (volunteer != null)
             {
-                volunteer = response.Volunteer;
-                photoDataUri = BuildPhotoDataUri(volunteer.PhotoMimeType, volunteer.PhotoBase64);
                 qrCodeDataUri = BuildQrCodeDataUri(NavigationManager.Uri);
             }
             else
             {
-                loadError = response?.RESPONSE_DESCRPTION ?? "Unable to load volunteer profile.";
+                loadError = "Volunteer profile not found.";
             }
         }
         catch
@@ -341,6 +340,64 @@
         {
             isLoading = false;
         }
+    }
+
+    private async Task<CampaignVolunteerProfileDto?> LoadVolunteerAsync(int volunteerId)
+    {
+        try
+        {
+            var profileResponse = await CampaignVolunteerProfileService.GetVolunteerProfileAsync(volunteerId);
+            if (profileResponse?.RESPONSE_CODE == ConfigClass.SUCCESS && profileResponse.Volunteer != null)
+            {
+                photoDataUri = BuildPhotoDataUri(profileResponse.Volunteer.PhotoMimeType, profileResponse.Volunteer.PhotoBase64);
+                return profileResponse.Volunteer;
+            }
+        }
+        catch
+        {
+            // Fall back to the directory API when the profile endpoint is unavailable in production.
+        }
+
+        var listResponse = await CampaignVolunteerService.GetCampaignVolunteerListAsync(false);
+        if (listResponse?.RESPONSE_CODE != ConfigClass.SUCCESS || listResponse.VolunteerList == null)
+        {
+            return null;
+        }
+
+        var volunteerSummary = listResponse.VolunteerList.FirstOrDefault(item => item.VolunteerId == volunteerId);
+        return volunteerSummary is null ? null : MapVolunteerProfile(volunteerSummary);
+    }
+
+    private static CampaignVolunteerProfileDto MapVolunteerProfile(CampaignVolunteerDto volunteer)
+    {
+        return new CampaignVolunteerProfileDto
+        {
+            VolunteerId = volunteer.VolunteerId,
+            FullNameEn = volunteer.FullNameEn,
+            FullNameBn = volunteer.FullNameBn,
+            FatherNameEn = volunteer.FatherNameEn,
+            FatherNameBn = volunteer.FatherNameBn,
+            MotherNameEn = volunteer.MotherNameEn,
+            MotherNameBn = volunteer.MotherNameBn,
+            GenderName = volunteer.GenderName,
+            BloodGroupName = volunteer.BloodGroupName,
+            DivisionName = volunteer.DivisionName,
+            ZillaName = volunteer.ZillaName,
+            ThanaName = volunteer.ThanaName,
+            VillageName = volunteer.VillageName,
+            PostOfficeName = volunteer.PostOfficeName,
+            PhoneNumber = volunteer.PhoneNumber,
+            WhatsAppNumber = volunteer.WhatsAppNumber,
+            Email = volunteer.Email,
+            DateOfBirth = volunteer.DateOfBirth,
+            UnitCommitteeName = volunteer.UnitCommitteeName,
+            BloodDonationsCount = volunteer.BloodDonationsCount,
+            GroupingCampParticipationCount = volunteer.GroupingCampParticipationCount,
+            Active = volunteer.Active,
+            CreatedDate = volunteer.CreatedDate,
+            UpdatedDate = volunteer.UpdatedDate,
+            PhotoLocation = volunteer.PhotoLocation
+        };
     }
 
     private static RenderFragment DetailItem(string label, string? value, int columnSize = 6) => builder =>
