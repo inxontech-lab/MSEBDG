@@ -10,7 +10,7 @@ namespace Domain.Core
 {
     public static class ConfigClass
     {
-        public static string ConnectionString = "Server=localhost;Database=MSEBDGCamps;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=DiriWeb;TrustServerCertificate=True";
+        public static string ConnectionString = "Server=localhost;Database=MSEBDGCamps;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=123;TrustServerCertificate=True";
         //public static string ConnectionString = "Server=phcawsprodmssql1.cqpw79y6zq7h.me-south-1.rds.amazonaws.com;Database=PHCServices;Trusted_Connection=True;Integrated Security=false;User Id=admin;Password=VjdO9pnljHQvEfmHzoIo;TrustServerCertificate=True";
         //Scaffold-DbContext "Server=localhost;Database=MSEBDGCamps;Trusted_Connection=True;Integrated Security=false;User Id=sa;Password=123;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir GroupingCampModels/DBModels -Force
 
