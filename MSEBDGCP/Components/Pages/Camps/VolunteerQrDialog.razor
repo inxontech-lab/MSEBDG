@@ -49,10 +49,27 @@
         border: 1px solid rgba(235, 235, 235, .95);
     }
 
+    .volunteer-qr-link {
+        display: inline-block;
+        width: 100%;
+        padding: .65rem .75rem;
+        border: 1px solid #ced4da;
+        border-radius: .375rem;
+        background: #fff;
+        color: var(--rz-text-color, #212529);
+        text-decoration: none;
+        word-break: break-all;
+    }
+
+    .volunteer-qr-link:hover {
+        color: var(--rz-primary, #0d6efd);
+        text-decoration: underline;
+    }
+
     .volunteer-qr-action-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-        gap: .75rem;
+        grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+        gap: .5rem;
         margin-top: 1rem;
     }
 
@@ -60,20 +77,26 @@
         text-align: left;
         background: #fafafa;
         border: 1px solid #ececec;
-        border-radius: 16px;
-        padding: 1rem;
+        border-radius: 14px;
+        padding: .7rem .8rem;
     }
 
     .volunteer-qr-share-card h6 {
-        font-size: .95rem;
+        font-size: .85rem;
         font-weight: 700;
-        margin-bottom: .75rem;
+        margin-bottom: .45rem;
     }
 
     .volunteer-qr-share-buttons {
         display: flex;
         flex-wrap: wrap;
-        gap: .5rem;
+        gap: .35rem;
+    }
+
+    .volunteer-qr-small-button {
+        font-size: .78rem;
+        min-height: 30px;
+        padding-inline: .6rem;
     }
 </style>
 
@@ -96,7 +119,7 @@
 
         <div class="mt-4 text-start">
             <label class="form-label fw-semibold">Volunteer details URL</label>
-            <div class="form-control" style="height:auto; word-break:break-all;">@detailsUrl</div>
+            <a href="@detailsUrl" target="_blank" rel="noopener noreferrer" class="volunteer-qr-link">@detailsUrl</a>
         </div>
 
         <div class="volunteer-qr-action-grid">
@@ -105,7 +128,7 @@
                 <div class="volunteer-qr-share-card">
                     <h6>WhatsApp</h6>
                     <div class="volunteer-qr-share-buttons">
-                        <RadzenButton Text="Open Chat" Icon="chat" ButtonStyle="ButtonStyle.Success" Click="ShareToWhatsAppAsync" />
+                        <RadzenButton Text="Open Chat" Icon="chat" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareToWhatsAppAsync" />
                     </div>
                 </div>
             }
@@ -115,7 +138,7 @@
                 <div class="volunteer-qr-share-card">
                     <h6>Email</h6>
                     <div class="volunteer-qr-share-buttons">
-                        <RadzenButton Text="Compose Email" Icon="mail" ButtonStyle="ButtonStyle.Primary" Click="ShareByEmailAsync" />
+                        <RadzenButton Text="Compose Email" Icon="mail" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareByEmailAsync" />
                     </div>
                 </div>
             }
@@ -125,7 +148,7 @@
                 <div class="volunteer-qr-share-card">
                     <h6>QR image</h6>
                     <div class="volunteer-qr-share-buttons">
-                        <RadzenButton Text="Share QR Image" Icon="ios_share" ButtonStyle="ButtonStyle.Light" Click="ShareQrImageAsync" />
+                        <RadzenButton Text="Share QR Image" Icon="ios_share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareQrImageAsync" />
                     </div>
                 </div>
             }
@@ -164,7 +187,7 @@
             return;
         }
 
-        var message = $"Hello {VolunteerName}, here is your volunteer QR code link: {detailsUrl}";
+        var message = $"Hello {VolunteerName}, here is your volunteer QR code link:\n{detailsUrl}";
 
         var shared = await TryShareQrImageAsync($"Volunteer QR Code - {VolunteerName}", message);
         if (!shared)
@@ -182,7 +205,7 @@
         }
 
         var subject = $"Volunteer QR Code - {VolunteerName}";
-        var body = $"Hello {VolunteerName},\n\nHere is your volunteer QR code link:\n{detailsUrl}";
+        var body = $"Hello {VolunteerName},\n\nHere is your volunteer QR code link:\n{detailsUrl}\n\nYou can tap the link above to open your volunteer page.";
 
         var shared = await TryShareQrImageAsync(subject, $"Here is the volunteer QR code for {VolunteerName}.");
         if (!shared)
