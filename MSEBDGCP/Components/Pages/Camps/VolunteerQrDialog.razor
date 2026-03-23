@@ -1,34 +1,107 @@
 @using QRCoder
 @using Domain.CampsModels.RespDTO
 @using Shared.VolunteerLinks
+@using Radzen
 @inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject NotificationService NotificationService
 
 <style>
-    .volunteer-qr-dialog-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        margin-bottom: 1rem;
+    .volunteer-qr-dialog {
+        padding: .5rem;
     }
 
-    .volunteer-qr-header-logo {
+    .volunteer-qr-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: .75rem;
+    }
+
+    .volunteer-qr-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #ececec;
+        border-radius: 18px;
+        box-shadow: 0 12px 28px rgba(0,0,0,.08);
+    }
+
+    .volunteer-qr-image {
+        width: 260px;
+        max-width: 100%;
+        display: block;
+        border-radius: 12px;
+    }
+
+    .volunteer-qr-center-logo {
+        position: absolute;
         width: 56px;
         height: 56px;
-        object-fit: contain;
-        filter: drop-shadow(0 10px 18px rgba(198, 34, 34, .18));
+        object-fit: cover;
+        border-radius: 50%;
+        padding: 6px;
+        background: rgba(255, 255, 255, .94);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, .12);
+        border: 1px solid rgba(235, 235, 235, .95);
+    }
+
+    .volunteer-qr-link {
+        display: inline-block;
+        width: 100%;
+        padding: .65rem .75rem;
+        border: 1px solid #ced4da;
+        border-radius: .375rem;
+        background: #fff;
+        color: var(--rz-text-color, #212529);
+        text-decoration: none;
+        word-break: break-all;
+    }
+
+    .volunteer-qr-link:hover {
+        color: var(--rz-primary, #0d6efd);
+        text-decoration: underline;
+    }
+
+    .volunteer-qr-action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+        gap: .5rem;
+        margin-top: 1rem;
+    }
+
+    .volunteer-qr-share-card {
+        text-align: left;
+        background: #fafafa;
+        border: 1px solid #ececec;
+        border-radius: 14px;
+        padding: .7rem .8rem;
+    }
+
+    .volunteer-qr-share-card h6 {
+        font-size: .85rem;
+        font-weight: 700;
+        margin-bottom: .45rem;
+    }
+
+    .volunteer-qr-share-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .35rem;
+    }
+
+    .volunteer-qr-small-button {
+        font-size: .78rem;
+        min-height: 30px;
+        padding-inline: .6rem;
     }
 </style>
 
-
-<div class="text-center p-2">
-    <div class="volunteer-qr-dialog-title">
-        <img src="images/app_logo.jpeg" alt="Blood donors logo" class="volunteer-qr-header-logo" />
-        <div class="text-start">
-            <h4 class="mb-1">Volunteer QR Code</h4>
-            <div class="fw-semibold">@VolunteerName</div>
-        </div>
-    </div>
+<div class="text-center volunteer-qr-dialog">
+    <div class="volunteer-qr-name">@VolunteerName</div>
     <p class="text-muted mb-3">Scan the QR code to open the volunteer details page on the public website.</p>
 
     @if (string.IsNullOrWhiteSpace(qrCodeDataUri))
@@ -39,13 +112,46 @@
     }
     else
     {
-        <img src="@qrCodeDataUri" alt="QR code for @VolunteerName" style="width:260px; max-width:100%; border-radius:18px; border:1px solid #ececec; padding:12px; background:#fff; box-shadow:0 12px 28px rgba(0,0,0,.08);" />
+        <div class="volunteer-qr-wrapper">
+            <img src="@qrCodeDataUri" alt="QR code for @VolunteerName" class="volunteer-qr-image" />
+            <img src="images/app_logo.jpeg" alt="Blood donors logo" class="volunteer-qr-center-logo" />
+        </div>
+
         <div class="mt-4 text-start">
             <label class="form-label fw-semibold">Volunteer details URL</label>
-            <div class="form-control" style="height:auto; word-break:break-all;">@detailsUrl</div>
+            <a href="@detailsUrl" target="_blank" rel="noopener noreferrer" class="volunteer-qr-link">@detailsUrl</a>
         </div>
-        <div class="small text-muted mt-3 text-start">
-            Configure <code>PublicUrls:VolunteerWebsiteBaseAddress</code> in <code>MSEBDGCP/appsettings*.json</code> for the correct environment.
+
+        <div class="volunteer-qr-action-grid">
+            @if (!string.IsNullOrWhiteSpace(WhatsAppNumber))
+            {
+                <div class="volunteer-qr-share-card">
+                    <h6>WhatsApp</h6>
+                    <div class="volunteer-qr-share-buttons">
+                        <RadzenButton Text="Open Chat" Icon="chat" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareToWhatsAppAsync" />
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Email))
+            {
+                <div class="volunteer-qr-share-card">
+                    <h6>Email</h6>
+                    <div class="volunteer-qr-share-buttons">
+                        <RadzenButton Text="Compose Email" Icon="mail" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareByEmailAsync" />
+                    </div>
+                </div>
+            }
+
+            @if (CanUseNativeShare)
+            {
+                <div class="volunteer-qr-share-card">
+                    <h6>QR image</h6>
+                    <div class="volunteer-qr-share-buttons">
+                        <RadzenButton Text="Share QR Image" Icon="ios_share" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" class="volunteer-qr-small-button" Click="ShareQrImageAsync" />
+                    </div>
+                </div>
+            }
         </div>
     }
 </div>
@@ -53,9 +159,12 @@
 @code {
     [Parameter] public int VolunteerId { get; set; }
     [Parameter] public string VolunteerName { get; set; } = string.Empty;
+    [Parameter] public string? WhatsAppNumber { get; set; }
+    [Parameter] public string? Email { get; set; }
 
     private string? detailsUrl;
     private string? qrCodeDataUri;
+    private bool CanUseNativeShare => !string.IsNullOrWhiteSpace(qrCodeDataUri);
 
     protected override void OnParametersSet()
     {
@@ -71,10 +180,92 @@
         qrCodeDataUri = BuildQrCodeDataUri(detailsUrl);
     }
 
+    private async Task ShareToWhatsAppAsync()
+    {
+        if (string.IsNullOrWhiteSpace(detailsUrl) || string.IsNullOrWhiteSpace(WhatsAppNumber))
+        {
+            return;
+        }
+
+        var message = $"Hello {VolunteerName}, here is your volunteer QR code link:\n{detailsUrl}";
+
+        var shared = await TryShareQrImageAsync($"Volunteer QR Code - {VolunteerName}", message);
+        if (!shared)
+        {
+            await JSRuntime.InvokeVoidAsync("volunteerQrShare.openWhatsApp", WhatsAppNumber, message);
+            NotificationService.Notify(NotificationSeverity.Info, "WhatsApp opened", "Opened the volunteer's WhatsApp chat with the QR link.");
+        }
+    }
+
+    private async Task ShareByEmailAsync()
+    {
+        if (string.IsNullOrWhiteSpace(detailsUrl) || string.IsNullOrWhiteSpace(Email))
+        {
+            return;
+        }
+
+        var subject = $"Volunteer QR Code - {VolunteerName}";
+        var body = $"Hello {VolunteerName},\n\nHere is your volunteer QR code link:\n{detailsUrl}\n\nYou can tap the link above to open your volunteer page.";
+
+        var shared = await TryShareQrImageAsync(subject, $"Here is the volunteer QR code for {VolunteerName}.");
+        if (!shared)
+        {
+            await JSRuntime.InvokeVoidAsync("volunteerQrShare.openEmail", Email, subject, body);
+            NotificationService.Notify(NotificationSeverity.Info, "Email opened", "Opened a draft email addressed to the volunteer.");
+        }
+    }
+
+    private async Task ShareQrImageAsync()
+    {
+        if (string.IsNullOrWhiteSpace(detailsUrl))
+        {
+            return;
+        }
+
+        var shared = await TryShareQrImageAsync($"Volunteer QR Code - {VolunteerName}", $"Volunteer details: {detailsUrl}");
+        NotificationService.Notify(
+            shared ? NotificationSeverity.Success : NotificationSeverity.Warning,
+            shared ? "QR image ready" : "QR image sharing unavailable",
+            shared
+                ? "The QR image was shared using the browser's native share dialog."
+                : "Native QR image sharing is not available in this browser. Use WhatsApp or Email to send the volunteer link.");
+    }
+
+    private async Task<bool> TryShareQrImageAsync(string title, string text)
+    {
+        if (string.IsNullOrWhiteSpace(qrCodeDataUri))
+        {
+            return false;
+        }
+
+        try
+        {
+            return await JSRuntime.InvokeAsync<bool>(
+                "volunteerQrShare.tryShareQrImage",
+                qrCodeDataUri,
+                BuildFileName(),
+                title,
+                text,
+                detailsUrl ?? string.Empty);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private string BuildFileName()
+    {
+        var invalidChars = Path.GetInvalidFileNameChars();
+        var sanitizedName = string.Concat(VolunteerName.Select(ch => invalidChars.Contains(ch) ? '-' : ch)).Trim();
+        sanitizedName = string.IsNullOrWhiteSpace(sanitizedName) ? $"volunteer-{VolunteerId}" : sanitizedName.Replace(' ', '-');
+        return $"{sanitizedName}-qr.png";
+    }
+
     private static string BuildQrCodeDataUri(string url)
     {
         using var generator = new QRCodeGenerator();
-        using var data = generator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+        using var data = generator.CreateQrCode(url, QRCodeGenerator.ECCLevel.H);
         var qrCode = new PngByteQRCode(data);
         var bytes = qrCode.GetGraphic(20);
         return $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
