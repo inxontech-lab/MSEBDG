@@ -4,7 +4,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: #fff;
-        text-shadow: 0 0 2px rgba(0,0,0,0.95), 0 0 12px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.65);
+        line-height: 1.1;
+        letter-spacing: 0.01em;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
     }
 
     .fade-logo {
@@ -16,14 +18,14 @@
     }
 
     .site-header-text {
-        color: #fff !important;
-        text-shadow: 0 0 2px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.75), 0 2px 8px rgba(0,0,0,0.65);
+        color: rgba(255, 255, 255, 0.92) !important;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     }
 
     .site-header-link {
-        color: #fff !important;
+        color: rgba(255, 255, 255, 0.96) !important;
         font-weight: 600;
-        text-shadow: 0 0 2px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.75), 0 2px 8px rgba(0,0,0,0.65);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     }
 
     .site-header-link:hover,
@@ -32,11 +34,17 @@
     }
 
     .site-header-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
         color: #fff;
         border: 1px solid #FF6F0F;
         background: #FF6F0F;
-        font-weight: 600;
-        box-shadow: 0 10px 24px rgba(255, 111, 15, 0.28);
+        font-weight: 700;
+        line-height: 1;
+        border-radius: 999px;
+        box-shadow: 0 10px 24px rgba(255, 111, 15, 0.22);
+        text-shadow: none;
     }
 
     .site-header-action:hover,
@@ -44,6 +52,19 @@
         color: #fff;
         border-color: #ff8c3a;
         background: #ff8c3a;
+        box-shadow: 0 12px 28px rgba(255, 111, 15, 0.28);
+    }
+
+    .site-header-action-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        background: #fff;
+        color: var(--primary);
+        border-radius: 999px;
+        flex-shrink: 0;
     }
 
     .site-header-toggle {
@@ -106,11 +127,11 @@
                 <a href="/volunteers" class="nav-item nav-link site-header-link">Volunteers</a>
             </div>
             <div class="d-flex ms-lg-2 my-3 my-lg-0 justify-content-center">
-                <a class="btn py-2 px-3 site-header-action" href="/volunteers">
-                    Register as Donor
-                    <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
+                <a class="btn py-2 px-4 site-header-action" href="/volunteers">
+                    <span>Register as Donor</span>
+                    <span class="site-header-action-icon">
                         <i class="fa fa-arrow-right"></i>
-                    </div>
+                    </span>
                 </a>
             </div>
         </div>
