@@ -1,5 +1,6 @@
 @using QRCoder
 @using Domain.CampsModels.RespDTO
+@using Shared.VolunteerLinks
 @inject IConfiguration Configuration
 
 <div class="text-center p-2">
@@ -42,7 +43,7 @@
             return;
         }
 
-        detailsUrl = $"{baseAddress}/volunteers/{VolunteerId}";
+        detailsUrl = $"{baseAddress}{VolunteerPublicLinkEncoder.BuildVolunteerDetailsPath(VolunteerId, Configuration)}";
         qrCodeDataUri = BuildQrCodeDataUri(detailsUrl);
     }
 

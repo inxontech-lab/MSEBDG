@@ -1,8 +1,10 @@
-@page "/volunteers/{VolunteerId:int}"
+@page "/volunteers/{VolunteerToken}"
 @layout Layout.VolunteerLayout
 @using Domain.Core
 @using Domain.CampsModels.RespDTO
+@using Shared.VolunteerLinks
 @inject Shared.CampsClient.Master.CampaignVolunteerProfileService CampaignVolunteerProfileService
+@inject IConfiguration Configuration
 
 <PageTitle>Volunteer Details</PageTitle>
 
@@ -14,16 +16,42 @@
 
     .volunteer-profile-shell {
         background: linear-gradient(135deg, rgba(255, 248, 249, .98) 0%, rgba(255, 255, 255, .98) 100%);
-        border: 1px solid rgba(254, 0, 2, .10);
+        border: 1px solid rgba(0, 153, 73, .12);
         border-radius: 28px;
-        box-shadow: 0 24px 60px rgba(125, 28, 34, .10);
+        box-shadow: 0 24px 60px rgba(75, 99, 86, .10);
         overflow: hidden;
     }
 
     .volunteer-profile-hero {
         padding: 2.5rem;
-        background: linear-gradient(135deg, rgba(125, 28, 34, .95), rgba(173, 36, 48, .92));
-        color: white;
+        background: linear-gradient(135deg, rgba(255, 241, 244, .98) 0%, rgba(255, 249, 245, .97) 46%, rgba(239, 250, 244, .96) 100%);
+        color: #315b4b;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .volunteer-profile-hero::before,
+    .volunteer-profile-hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .volunteer-profile-hero::before {
+        width: 260px;
+        height: 260px;
+        top: -110px;
+        right: -70px;
+        background: radial-gradient(circle, rgba(125, 212, 161, .28) 0%, rgba(125, 212, 161, 0) 72%);
+    }
+
+    .volunteer-profile-hero::after {
+        width: 220px;
+        height: 220px;
+        bottom: -110px;
+        left: -70px;
+        background: radial-gradient(circle, rgba(255, 181, 190, .28) 0%, rgba(255, 181, 190, 0) 72%);
     }
 
     .volunteer-profile-photo,
@@ -36,7 +64,10 @@
     .volunteer-profile-photo {
         object-fit: cover;
         background: white;
-        border: 5px solid rgba(255,255,255,.2);
+        border: 5px solid rgba(255,255,255,.55);
+        box-shadow: 0 18px 38px rgba(75, 99, 86, .12);
+        position: relative;
+        z-index: 1;
     }
 
     .volunteer-profile-photo-placeholder {
@@ -44,8 +75,11 @@
         align-items: center;
         justify-content: center;
         font-size: 4rem;
-        background: rgba(255,255,255,.12);
-        border: 5px solid rgba(255,255,255,.2);
+        background: rgba(255,255,255,.45);
+        border: 5px solid rgba(255,255,255,.55);
+        color: #4e7464;
+        position: relative;
+        z-index: 1;
     }
 
     .profile-badge {
@@ -54,18 +88,21 @@
         gap: .5rem;
         padding: .55rem 1rem;
         border-radius: 999px;
-        background: rgba(255,255,255,.12);
-        border: 1px solid rgba(255,255,255,.18);
+        background: rgba(255,255,255,.66);
+        border: 1px solid rgba(49, 91, 75, .08);
+        color: #315b4b;
         font-weight: 600;
+        position: relative;
+        z-index: 1;
     }
 
     .detail-card {
-        border: 1px solid rgba(125, 28, 34, .08);
+        border: 1px solid rgba(49, 91, 75, .08);
         border-radius: 22px;
         background: white;
         padding: 1.5rem;
         height: 100%;
-        box-shadow: 0 14px 30px rgba(125, 28, 34, .06);
+        box-shadow: 0 14px 30px rgba(75, 99, 86, .06);
     }
 
     .detail-label {
@@ -119,7 +156,7 @@
                             }
                         </div>
                         <div class="col-lg">
-                            <a href="/volunteers" class="btn btn-light btn-sm rounded-pill mb-3"><i class="fa fa-arrow-left me-2"></i>Back to volunteer directory</a>
+                            <a href="/volunteers" class="btn btn-light btn-sm rounded-pill mb-3 position-relative"><i class="fa fa-arrow-left me-2"></i>Back to volunteer directory</a>
                             <h1 class="display-6 mb-2">@volunteer.FullNameEn</h1>
                             <p class="fs-5 mb-3 opacity-75">@volunteer.FullNameBn</p>
                             <div class="d-flex flex-wrap gap-2 mb-3">
@@ -223,7 +260,7 @@
 </div>
 
 @code {
-    [Parameter] public int VolunteerId { get; set; }
+    [Parameter] public string VolunteerToken { get; set; } = string.Empty;
 
     private bool isLoading = true;
     private string? loadError;
@@ -237,9 +274,16 @@
         volunteer = null;
         photoDataUri = null;
 
+        if (!VolunteerPublicLinkEncoder.TryDecodeVolunteerId(VolunteerToken, Configuration, out var volunteerId))
+        {
+            loadError = "The volunteer link is invalid or has expired.";
+            isLoading = false;
+            return;
+        }
+
         try
         {
-            var response = await CampaignVolunteerProfileService.GetVolunteerProfileAsync(VolunteerId);
+            var response = await CampaignVolunteerProfileService.GetVolunteerProfileAsync(volunteerId);
             if (response?.RESPONSE_CODE == ConfigClass.SUCCESS && response.Volunteer != null)
             {
                 volunteer = response.Volunteer;
