@@ -17,8 +17,7 @@ namespace Shared.CampsClient.Master
 
         public async Task<CampaignVolunteerProfileRespDTO> GetVolunteerProfileAsync(int volunteerId)
         {
-            var baseAddress = _configuration["ApiEndpoints:ControlPanelBaseAddress"]
-                ?? _configuration["ApiEndpoints:BaseAddress"];
+            var baseAddress = _configuration["ApiEndpoints:BaseAddress"];
 
             var returnString = await _serviceClient.clientMethod($"{baseAddress}VolunteerProfile/GetVolunteerProfile/{volunteerId}");
             return JsonConvert.DeserializeObject<CampaignVolunteerProfileRespDTO>(returnString) ?? new CampaignVolunteerProfileRespDTO();
