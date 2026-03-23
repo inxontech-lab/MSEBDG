@@ -20,6 +20,7 @@ builder.Services.AddScoped<ServiceClient>();
 builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<BloodGroupService>();
 builder.Services.AddScoped<CampTypeService>();
+builder.Services.AddScoped<CampaignVolunteerService>();
 builder.Services.AddScoped<CountryService>();
 builder.Services.AddScoped<FemaleQuestionService>();
 builder.Services.AddScoped<GenderService>();

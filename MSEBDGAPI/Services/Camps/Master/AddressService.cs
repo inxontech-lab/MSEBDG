@@ -22,12 +22,27 @@ namespace MSEBDGAPI.Services.Camps.Master
             return _IGroupingCampContextDataRepo.GetDistrictList(DivisionId);
         }
 
+        public DistrictListRespDTO GetZillaList(int DivisionId)
+        {
+            return _IGroupingCampContextDataRepo.GetDistrictList(DivisionId);
+        }
+
         public UpazilaListRespDTO GetUpazilaList(int DistrictId)
         {
             return _IGroupingCampContextDataRepo.GetUpazilaList(DistrictId);
         }
 
+        public UpazilaListRespDTO GetThanaList(int DistrictId)
+        {
+            return _IGroupingCampContextDataRepo.GetUpazilaList(DistrictId);
+        }
+
         public UnionWardListRespDTO GetWardUnionList(int UpazilaId)
+        {
+            return _IGroupingCampContextDataRepo.GetWardUnionList(UpazilaId);
+        }
+
+        public UnionWardListRespDTO GetVillageList(int UpazilaId)
         {
             return _IGroupingCampContextDataRepo.GetWardUnionList(UpazilaId);
         }
