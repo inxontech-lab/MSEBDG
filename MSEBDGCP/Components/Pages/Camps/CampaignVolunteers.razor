@@ -9,7 +9,7 @@
             <RadzenText Text="Manage the volunteer registry collected from the campaign volunteer form." TextStyle="TextStyle.Body2" Style="color:#6c757d;" />
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="4" Style="text-align:right;">
-            <RadzenButton Text="Create New" Icon="add_circle" Click="OpenCreateDialog" Style="background:#193e91;" />
+            <RadzenButton Text="Create New" Icon="add_circle" Click="OpenCreateDialog" Class="msebdg-action-button" />
         </RadzenColumn>
     </RadzenRow>
 </RadzenCard>
@@ -49,8 +49,8 @@
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Title="Actions" Width="120px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                 <Template Context="item">
-                    <RadzenButton Icon="edit" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Click="@(args => OpenEditDialog(item.VolunteerId))" Style="margin-right:6px; color:#193e91;" />
-                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Shade="Shade.Lighter" Click="@(args => DeleteVolunteer(item.VolunteerId, item.FullNameEn))" />
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => OpenEditDialog(item.VolunteerId))" Style="margin-right:6px;" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => DeleteVolunteer(item.VolunteerId, item.FullNameEn))" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
