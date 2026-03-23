@@ -1,5 +1,46 @@
 @page "/campaign-volunteers"
 
+<style>
+    .campaign-volunteers-grid .rz-badge.active-status-badge {
+        background: #198754 !important;
+        border-color: #198754 !important;
+        color: #ffffff !important;
+        box-shadow: 0 8px 18px rgba(25, 135, 84, .22);
+    }
+
+    .campaign-action-button-soft {
+        border-radius: 999px !important;
+        border-width: 1px !important;
+        box-shadow: none !important;
+        transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+
+    .campaign-action-button-soft:hover,
+    .campaign-action-button-soft:focus {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(49, 91, 75, .12) !important;
+        filter: saturate(1.05);
+    }
+
+    .campaign-action-button-soft.qr-button {
+        background: #eef8f1 !important;
+        border-color: #cfe8d6 !important;
+        color: #2f7a59 !important;
+    }
+
+    .campaign-action-button-soft.edit-button {
+        background: #eef4ff !important;
+        border-color: #cfdbf6 !important;
+        color: #3563b6 !important;
+    }
+
+    .campaign-action-button-soft.delete-button {
+        background: #fff1f1 !important;
+        border-color: #f3caca !important;
+        color: #c05a5a !important;
+    }
+</style>
+
 <PageTitle>Campaign Volunteers</PageTitle>
 
 <RadzenCard Style="border-radius:20px; box-shadow: 0 0 8px rgba(0,0,0,0.12); margin-bottom:20px;">
@@ -18,7 +59,7 @@
     <RadzenDataGrid @ref="volunteerGrid" Data="@volunteers" TItem="Domain.CampsModels.RespDTO.CampaignVolunteerDto"
                     AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="10"
                     FilterMode="FilterMode.Advanced" Responsive="true" EmptyText="No volunteers found."
-                    Class="rz-border-radius-2xl">
+                    Class="rz-border-radius-2xl campaign-volunteers-grid">
         <Columns>
             <RadzenDataGridColumn TItem="Domain.CampsModels.RespDTO.CampaignVolunteerDto" Title="Photo" Width="90px" Filterable="false" Sortable="false">
                 <Template Context="item">
@@ -39,7 +80,7 @@
                 <Template Context="item">
                     @if (item.Active)
                     {
-                        <RadzenBadge Text="Active" BadgeStyle="BadgeStyle.Success" />
+                        <RadzenBadge Text="Active" Shade="Shade.Darker" BadgeStyle="BadgeStyle.Success" class="active-status-badge" />
                     }
                     else
                     {
@@ -49,9 +90,9 @@
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Title="Actions" Width="190px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                 <Template Context="item">
-                    <RadzenButton Icon="qr_code_2" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => ViewQrCode(item))" Style="margin-right:6px;" />
-                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => OpenEditDialog(item.VolunteerId))" Style="margin-right:6px;" />
-                    <RadzenButton Icon="delete" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => DeleteVolunteer(item.VolunteerId, item.FullNameEn))" />
+                    <RadzenButton Icon="qr_code_2" Size="ButtonSize.Small" Class="campaign-action-button-soft qr-button" Click="@(args => ViewQrCode(item))" Style="margin-right:6px;" />
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Class="campaign-action-button-soft edit-button" Click="@(args => OpenEditDialog(item.VolunteerId))" Style="margin-right:6px;" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" Class="campaign-action-button-soft delete-button" Click="@(args => DeleteVolunteer(item.VolunteerId, item.FullNameEn))" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>

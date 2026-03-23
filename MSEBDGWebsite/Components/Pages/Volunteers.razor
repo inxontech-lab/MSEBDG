@@ -2,8 +2,10 @@
 @layout Layout.VolunteerLayout
 @using Domain.Core
 @using Domain.CampsModels.RespDTO
+@using Shared.VolunteerLinks
 @inject Shared.CampsClient.Master.CampaignVolunteerService CampaignVolunteerService
 @inject Shared.CampsClient.Master.CampaignVolunteerProfileService CampaignVolunteerProfileService
+@inject IConfiguration Configuration
 
 <PageTitle>Campaign Volunteers</PageTitle>
 
@@ -62,11 +64,11 @@
     }
 
     .volunteer-card {
-        border: 1px solid rgba(255,255,255,.6);
+        border: 1px solid rgba(0, 153, 73, .14);
         border-radius: 24px;
         overflow: hidden;
-        background: linear-gradient(180deg, #fffdfd 0%, #fff7f6 52%, #fef3f2 100%);
-        box-shadow: 0 16px 36px rgba(164, 38, 44, 0.10);
+        background: linear-gradient(135deg, rgba(255, 239, 241, .98) 0%, rgba(255, 247, 244, .97) 42%, rgba(240, 251, 245, .96) 100%);
+        box-shadow: 0 16px 36px rgba(44, 122, 79, 0.12);
         transition: transform .25s ease, box-shadow .25s ease;
         height: 100%;
         position: relative;
@@ -78,12 +80,12 @@
         position: absolute;
         inset: 0 0 auto 0;
         height: 5px;
-        background: linear-gradient(90deg, #ef5350 0%, #ff8a65 45%, #ffd54f 100%);
+        background: linear-gradient(90deg, rgba(255, 173, 181, .9) 0%, rgba(255, 220, 188, .95) 48%, rgba(125, 212, 161, .95) 100%);
     }
 
     .volunteer-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 22px 40px rgba(164, 38, 44, 0.16);
+        box-shadow: 0 22px 40px rgba(44, 122, 79, 0.18);
     }
 
     .volunteer-photo,
@@ -357,7 +359,7 @@
             .Where(value => !string.IsNullOrWhiteSpace(value)));
     }
 
-    private static string GetVolunteerDetailsUrl(int volunteerId) => $"/volunteers/{volunteerId}";
+    private string GetVolunteerDetailsUrl(int volunteerId) => VolunteerPublicLinkEncoder.BuildVolunteerDetailsPath(volunteerId, Configuration);
 
     private static string? BuildPhotoDataUri(string? photoMimeType, string? photoBase64)
     {
