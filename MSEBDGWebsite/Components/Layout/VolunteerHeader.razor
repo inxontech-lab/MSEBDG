@@ -9,6 +9,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: #fff;
+        line-height: 1.1;
+        letter-spacing: 0.01em;
     }
 
     .volunteer-brand-accent,
@@ -18,7 +20,8 @@
 
     .volunteer-header-text,
     .volunteer-header-link {
-        color: #fff !important;
+        color: rgba(255, 255, 255, 0.96) !important;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
     .volunteer-header-link {
@@ -31,11 +34,16 @@
     }
 
     .volunteer-header-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
         color: #fff;
         border: 1px solid #FF6F0F;
         background: #FF6F0F;
-        font-weight: 600;
-        box-shadow: 0 10px 24px rgba(255, 111, 15, 0.28);
+        font-weight: 700;
+        line-height: 1;
+        border-radius: 999px;
+        box-shadow: 0 10px 24px rgba(255, 111, 15, 0.22);
     }
 
     .volunteer-header-action:hover,
@@ -43,6 +51,19 @@
         color: #fff;
         border-color: #ff8c3a;
         background: #ff8c3a;
+        box-shadow: 0 12px 28px rgba(255, 111, 15, 0.28);
+    }
+
+    .volunteer-header-action-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        background: #fff;
+        color: #FF6F0F;
+        border-radius: 999px;
+        flex-shrink: 0;
     }
 
     .volunteer-header-toggle {
@@ -93,11 +114,11 @@
                 <a href="/volunteers" class="nav-item nav-link volunteer-header-link volunteer-header-link-active">Volunteers</a>
             </div>
             <div class="d-flex ms-lg-2 my-3 my-lg-0 justify-content-center">
-                <a class="btn py-2 px-3 volunteer-header-action" href="/volunteers">
-                    Register as Donor
-                    <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
+                <a class="btn py-2 px-4 volunteer-header-action" href="/volunteers">
+                    <span>Register as Donor</span>
+                    <span class="volunteer-header-action-icon">
                         <i class="fa fa-arrow-right"></i>
-                    </div>
+                    </span>
                 </a>
             </div>
         </div>
