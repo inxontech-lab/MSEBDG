@@ -195,14 +195,14 @@
                         </div>
                         <div class="col-lg-auto text-center">
 
-                            @if (!string.IsNullOrWhiteSpace(qrCodeImageUrl))
+                            @* @if (!string.IsNullOrWhiteSpace(qrCodeImageUrl))
                             {
                                 <div class="volunteer-qr-card">
                                     <img src="@qrCodeImageUrl" alt="QR code for @volunteer.FullNameEn" class="volunteer-qr-image" />
                                     <div class="fw-semibold mt-3">Scan to open this profile</div>
                                     <div class="small text-muted mt-1">Volunteer details QR code</div>
                                 </div>
-                            }
+                            } *@
                         </div>
                     </div>
                 </div>
@@ -326,7 +326,7 @@
             volunteer = await LoadVolunteerAsync(volunteerId);
             if (volunteer != null)
             {
-                qrCodeImageUrl = BuildQrCodeDataUri(VolunteerToken);
+                //qrCodeImageUrl = BuildQrCodeDataUri(VolunteerToken);
             }
             else
             {
