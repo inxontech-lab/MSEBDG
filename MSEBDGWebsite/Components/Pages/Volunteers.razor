@@ -3,6 +3,7 @@
 @using Domain.Core
 @using Domain.CampsModels.RespDTO
 @inject Shared.CampsClient.Master.CampaignVolunteerService CampaignVolunteerService
+@inject Shared.CampsClient.Master.CampaignVolunteerProfileService CampaignVolunteerProfileService
 
 <PageTitle>Campaign Volunteers</PageTitle>
 
@@ -12,16 +13,36 @@
     }
 
     .volunteer-hero {
-        background: linear-gradient(135deg, rgba(25,62,145,.92), rgba(11,126,179,.82));
-        color: white;
+        background: linear-gradient(135deg, rgba(255, 239, 241, .98) 0%, rgba(255, 247, 244, .97) 42%, rgba(240, 251, 245, .96) 100%);
+        color: #7d1c22;
+        border: 1px solid rgba(254, 0, 2, .10);
         border-radius: 24px;
+        box-shadow: 0 18px 40px rgba(125, 28, 34, .08);
         padding: 3rem 2rem;
         margin-top: 7rem;
         margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .volunteer-hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -8% -35% auto;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0, 153, 73, .16) 0%, rgba(0, 153, 73, 0) 72%);
+        pointer-events: none;
     }
 
     .volunteer-hero h1 {
+        color: #7d1c22;
         scroll-margin-top: 11rem;
+    }
+
+    .volunteer-hero-copy {
+        color: #6d5b5f;
     }
 
     .volunteer-loading {
@@ -34,33 +55,60 @@
     }
 
     .volunteer-card {
-        border: 0;
-        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,.6);
+        border-radius: 24px;
         overflow: hidden;
-        box-shadow: 0 12px 28px rgba(25, 62, 145, 0.10);
+        background: linear-gradient(180deg, #fffdfd 0%, #fff7f6 52%, #fef3f2 100%);
+        box-shadow: 0 16px 36px rgba(164, 38, 44, 0.10);
         transition: transform .25s ease, box-shadow .25s ease;
         height: 100%;
+        position: relative;
+    }
+
+    .volunteer-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 5px;
+        background: linear-gradient(90deg, #ef5350 0%, #ff8a65 45%, #ffd54f 100%);
     }
 
     .volunteer-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 18px 34px rgba(25, 62, 145, 0.18);
+        box-shadow: 0 22px 40px rgba(164, 38, 44, 0.16);
+    }
+
+    .volunteer-photo,
+    .volunteer-photo-placeholder {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        flex-shrink: 0;
     }
 
     .volunteer-photo {
-        width: 88px;
-        height: 88px;
-        border-radius: 50%;
         object-fit: cover;
-        border: 4px solid rgba(25,62,145,.12);
+        border: 4px solid rgba(239, 83, 80, .18);
+        background: white;
+    }
+
+    .volunteer-photo-placeholder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(255,235,238,.95), rgba(255,245,245,.95));
+        border: 4px solid rgba(239, 83, 80, .16);
+        color: #d32f2f;
+        font-size: 2rem;
     }
 
     .volunteer-pill {
         display: inline-flex;
         align-items: center;
         gap: .35rem;
-        background: #eef4ff;
-        color: #193e91;
+        background: rgba(255,255,255,.8);
+        color: #9f1d20;
+        border: 1px solid rgba(239, 83, 80, .12);
         padding: .35rem .75rem;
         border-radius: 999px;
         font-size: .85rem;
@@ -70,6 +118,26 @@
     .volunteer-meta {
         color: #6c757d;
         font-size: .95rem;
+        display: flex;
+        align-items: flex-start;
+        gap: .7rem;
+    }
+
+    .volunteer-meta i {
+        width: 1rem;
+        margin-top: .25rem;
+    }
+
+    .volunteer-name-bn {
+        color: #7c7c89;
+        font-weight: 500;
+    }
+
+    .volunteer-stat {
+        background: rgba(255,255,255,.78);
+        border-radius: 18px;
+        padding: 1rem;
+        border: 1px solid rgba(239, 83, 80, .10);
     }
 </style>
 
@@ -79,8 +147,8 @@
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
                     <div class="d-inline-block rounded-pill bg-white text-primary py-1 px-3 mb-3">Volunteer Directory</div>
-                    <h1 class="display-5 text-white mb-3">Meet the volunteers supporting our blood grouping campaigns.</h1>
-                    <p class="mb-0 fs-5">This page highlights the campaign volunteers registered through the official volunteer form and grouped by their service areas across Bangladesh.</p>
+                    <h1 class="display-5 mb-3">Meet the volunteers supporting our blood grouping campaigns.</h1>
+                    <p class="mb-0 fs-5 volunteer-hero-copy">This page highlights the campaign volunteers registered through the official volunteer form and grouped by their service areas across Bangladesh.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
                     <div class="bg-white text-dark rounded-4 p-4 shadow-sm">
@@ -116,10 +184,20 @@
                         <div class="card volunteer-card">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center gap-3 mb-3">
-                                    <img src="@GetPhoto(volunteer.PhotoLocation)" alt="@volunteer.FullNameEn" class="volunteer-photo" />
+                                    @if (!string.IsNullOrWhiteSpace(volunteer.PhotoDataUri))
+                                    {
+                                        <img src="@volunteer.PhotoDataUri" alt="@volunteer.FullNameEn" class="volunteer-photo" />
+                                    }
+                                    else
+                                    {
+                                        <div class="volunteer-photo-placeholder" aria-label="Volunteer photo unavailable">
+                                            <i class="fa fa-user text-danger"></i>
+                                        </div>
+                                    }
+
                                     <div>
                                         <h5 class="mb-1">@volunteer.FullNameEn</h5>
-                                        <div class="text-muted">@volunteer.FullNameBn</div>
+                                        <div class="volunteer-name-bn">@volunteer.FullNameBn</div>
                                     </div>
                                 </div>
 
@@ -128,24 +206,28 @@
                                     <span class="volunteer-pill"><i class="fa fa-user"></i>@volunteer.GenderName</span>
                                 </div>
 
-                                <div class="volunteer-meta mb-2"><i class="fa fa-phone-alt text-primary me-2"></i>@volunteer.PhoneNumber</div>
-                                @if (!string.IsNullOrWhiteSpace(volunteer.WhatsAppNumber))
-                                {
-                                    <div class="volunteer-meta mb-2"><i class="fab fa-whatsapp text-success me-2"></i>@volunteer.WhatsAppNumber</div>
-                                }
-                                <div class="volunteer-meta mb-2"><i class="fa fa-map-marker-alt text-danger me-2"></i>@volunteer.VillageName, @volunteer.ThanaName, @volunteer.ZillaName, @volunteer.DivisionName</div>
-                                <div class="volunteer-meta mb-2"><i class="fa fa-envelope text-primary me-2"></i>@(string.IsNullOrWhiteSpace(volunteer.Email) ? "No email provided" : volunteer.Email)</div>
-                                <div class="volunteer-meta mb-3"><i class="fa fa-building text-primary me-2"></i>@(string.IsNullOrWhiteSpace(volunteer.UnitCommitteeName) ? "Unit committee not provided" : volunteer.UnitCommitteeName)</div>
+                                <div class="volunteer-meta mb-2">
+                                    <i class="fa fa-map-marker-alt text-danger"></i>
+                                    <span>@GetAddress(volunteer)</span>
+                                </div>
+                                <div class="volunteer-meta mb-2">
+                                    <i class="fa fa-envelope text-primary"></i>
+                                    <span>@(string.IsNullOrWhiteSpace(volunteer.Email) ? "No email provided" : volunteer.Email)</span>
+                                </div>
+                                <div class="volunteer-meta mb-3">
+                                    <i class="fa fa-building text-primary"></i>
+                                    <span>@(string.IsNullOrWhiteSpace(volunteer.UnitCommitteeName) ? "Unit committee not provided" : volunteer.UnitCommitteeName)</span>
+                                </div>
 
                                 <div class="row g-2 text-center">
                                     <div class="col-6">
-                                        <div class="bg-light rounded-4 p-3">
+                                        <div class="volunteer-stat">
                                             <div class="h4 mb-0 text-primary">@volunteer.BloodDonationsCount</div>
                                             <small class="text-muted">Blood Donations</small>
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <div class="bg-light rounded-4 p-3">
+                                        <div class="volunteer-stat">
                                             <div class="h4 mb-0 text-primary">@volunteer.GroupingCampParticipationCount</div>
                                             <small class="text-muted">Campaigns Joined</small>
                                         </div>
@@ -163,7 +245,7 @@
 @code {
     private bool isLoading = true;
     private string? loadError;
-    private List<CampaignVolunteerDto> volunteers = new();
+    private List<VolunteerCardViewModel> volunteers = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -172,7 +254,11 @@
             var response = await CampaignVolunteerService.GetCampaignVolunteerListAsync(true);
             if (response?.RESPONSE_CODE == ConfigClass.SUCCESS && response.VolunteerList != null)
             {
-                volunteers = response.VolunteerList;
+                volunteers = response.VolunteerList
+                    .Select(MapVolunteer)
+                    .ToList();
+
+                await EnrichVolunteerProfilesAsync(volunteers);
             }
             else
             {
@@ -189,8 +275,88 @@
         }
     }
 
-    private string GetPhoto(string? photoLocation)
+    private async Task EnrichVolunteerProfilesAsync(List<VolunteerCardViewModel> volunteerCards)
     {
-        return string.IsNullOrWhiteSpace(photoLocation) ? "images/cropped_circle_image.png" : photoLocation;
+        var profileTasks = volunteerCards.Select(async volunteer =>
+        {
+            try
+            {
+                var profileResponse = await CampaignVolunteerProfileService.GetVolunteerProfileAsync(volunteer.VolunteerId);
+                if (profileResponse?.RESPONSE_CODE != ConfigClass.SUCCESS || profileResponse.Volunteer == null)
+                {
+                    return;
+                }
+
+                var profile = profileResponse.Volunteer;
+                volunteer.FullNameEn = profile.FullNameEn;
+                volunteer.FullNameBn = profile.FullNameBn;
+                volunteer.ThanaName = profile.ThanaName;
+                volunteer.ZillaName = profile.ZillaName;
+                volunteer.DivisionName = profile.DivisionName;
+                volunteer.Email = profile.Email;
+                volunteer.UnitCommitteeName = profile.UnitCommitteeName;
+                volunteer.BloodDonationsCount = profile.BloodDonationsCount;
+                volunteer.GroupingCampParticipationCount = profile.GroupingCampParticipationCount;
+                volunteer.PhotoDataUri = BuildPhotoDataUri(profile.PhotoMimeType, profile.PhotoBase64);
+            }
+            catch
+            {
+                // Keep base volunteer list data when the profile service is unavailable.
+            }
+        });
+
+        await Task.WhenAll(profileTasks);
+    }
+
+    private static VolunteerCardViewModel MapVolunteer(CampaignVolunteerDto volunteer)
+    {
+        return new VolunteerCardViewModel
+        {
+            VolunteerId = volunteer.VolunteerId,
+            FullNameEn = volunteer.FullNameEn,
+            FullNameBn = volunteer.FullNameBn,
+            BloodGroupName = volunteer.BloodGroupName,
+            GenderName = volunteer.GenderName,
+            ThanaName = volunteer.ThanaName,
+            ZillaName = volunteer.ZillaName,
+            DivisionName = volunteer.DivisionName,
+            Email = volunteer.Email,
+            UnitCommitteeName = volunteer.UnitCommitteeName,
+            BloodDonationsCount = volunteer.BloodDonationsCount,
+            GroupingCampParticipationCount = volunteer.GroupingCampParticipationCount
+        };
+    }
+
+    private static string GetAddress(VolunteerCardViewModel volunteer)
+    {
+        return string.Join(", ", new[] { volunteer.ThanaName, volunteer.ZillaName, volunteer.DivisionName }
+            .Where(value => !string.IsNullOrWhiteSpace(value)));
+    }
+
+    private static string? BuildPhotoDataUri(string? photoMimeType, string? photoBase64)
+    {
+        if (string.IsNullOrWhiteSpace(photoBase64))
+        {
+            return null;
+        }
+
+        return $"data:{(string.IsNullOrWhiteSpace(photoMimeType) ? "image/jpeg" : photoMimeType)};base64,{photoBase64}";
+    }
+
+    private sealed class VolunteerCardViewModel
+    {
+        public int VolunteerId { get; set; }
+        public string FullNameEn { get; set; } = string.Empty;
+        public string FullNameBn { get; set; } = string.Empty;
+        public string BloodGroupName { get; set; } = string.Empty;
+        public string GenderName { get; set; } = string.Empty;
+        public string ThanaName { get; set; } = string.Empty;
+        public string ZillaName { get; set; } = string.Empty;
+        public string DivisionName { get; set; } = string.Empty;
+        public string? Email { get; set; }
+        public string? UnitCommitteeName { get; set; }
+        public int BloodDonationsCount { get; set; }
+        public int GroupingCampParticipationCount { get; set; }
+        public string? PhotoDataUri { get; set; }
     }
 }
