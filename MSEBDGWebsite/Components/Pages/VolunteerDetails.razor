@@ -2,12 +2,10 @@
 @layout Layout.VolunteerLayout
 @using Domain.Core
 @using Domain.CampsModels.RespDTO
-@using QRCoder
 @using Shared.VolunteerLinks
 @inject Shared.CampsClient.Master.CampaignVolunteerProfileService CampaignVolunteerProfileService
 @inject Shared.CampsClient.Master.CampaignVolunteerService CampaignVolunteerService
 @inject IConfiguration Configuration
-@inject NavigationManager NavigationManager
 
 <PageTitle>Volunteer Details</PageTitle>
 
@@ -194,14 +192,14 @@
                             <p class="mb-0 opacity-75">This profile contains the volunteer's photo, personal details, campaign activity, and contact information from the official registration record.</p>
                         </div>
                         <div class="col-lg-auto text-center">
-                            @* @if (!string.IsNullOrWhiteSpace(qrCodeDataUri))
+                            @if (!string.IsNullOrWhiteSpace(qrCodeImageUrl))
                             {
                                 <div class="volunteer-qr-card">
-                                    <img src="@qrCodeDataUri" alt="QR code for @volunteer.FullNameEn" class="volunteer-qr-image" />
+                                    <img src="@qrCodeImageUrl" alt="QR code for @volunteer.FullNameEn" class="volunteer-qr-image" />
                                     <div class="fw-semibold mt-3">Scan to open this profile</div>
                                     <div class="small text-muted mt-1">Volunteer details QR code</div>
                                 </div>
-                            } *@
+                            }
                         </div>
                     </div>
                 </div>
@@ -303,7 +301,7 @@
     private string? loadError;
     private CampaignVolunteerProfileDto? volunteer;
     private string? photoDataUri;
-    private string? qrCodeDataUri;
+    private string? qrCodeImageUrl;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -311,7 +309,7 @@
         loadError = null;
         volunteer = null;
         photoDataUri = null;
-        qrCodeDataUri = null;
+        qrCodeImageUrl = null;
 
         if (!VolunteerPublicLinkEncoder.TryDecodeVolunteerId(VolunteerToken, Configuration, out var volunteerId))
         {
@@ -325,7 +323,7 @@
             volunteer = await LoadVolunteerAsync(volunteerId);
             if (volunteer != null)
             {
-                qrCodeDataUri = BuildQrCodeDataUri(BuildVolunteerDetailsUrl(volunteerId));
+                qrCodeImageUrl = $"/qr/volunteers/{Uri.EscapeDataString(VolunteerToken)}";
             }
             else
             {
@@ -450,25 +448,4 @@
         return $"data:{(string.IsNullOrWhiteSpace(photoMimeType) ? "image/jpeg" : photoMimeType)};base64,{photoBase64}";
     }
 
-    private string BuildVolunteerDetailsUrl(int volunteerId)
-    {
-        var detailsPath = VolunteerPublicLinkEncoder.BuildVolunteerDetailsPath(volunteerId, Configuration);
-        var publicBaseAddress = Configuration["PublicUrls:VolunteerWebsiteBaseAddress"]?.TrimEnd('/');
-
-        if (!string.IsNullOrWhiteSpace(publicBaseAddress))
-        {
-            return $"{publicBaseAddress}{detailsPath}";
-        }
-
-        return NavigationManager.ToAbsoluteUri(detailsPath).AbsoluteUri;
-    }
-
-    private static string BuildQrCodeDataUri(string url)
-    {
-        using var generator = new QRCodeGenerator();
-        using var data = generator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new PngByteQRCode(data);
-        var bytes = qrCode.GetGraphic(20);
-        return $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
-    }
 }
