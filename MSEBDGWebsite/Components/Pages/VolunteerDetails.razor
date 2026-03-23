@@ -1,0 +1,312 @@
+@page "/volunteers/{VolunteerId:int}"
+@layout Layout.VolunteerLayout
+@using Domain.Core
+@using Domain.CampsModels.RespDTO
+@inject Shared.CampsClient.Master.CampaignVolunteerProfileService CampaignVolunteerProfileService
+
+<PageTitle>Volunteer Details</PageTitle>
+
+<style>
+    .volunteer-details-page {
+        min-height: calc(100vh - 180px);
+        margin-top: 7rem;
+    }
+
+    .volunteer-profile-shell {
+        background: linear-gradient(135deg, rgba(255, 248, 249, .98) 0%, rgba(255, 255, 255, .98) 100%);
+        border: 1px solid rgba(254, 0, 2, .10);
+        border-radius: 28px;
+        box-shadow: 0 24px 60px rgba(125, 28, 34, .10);
+        overflow: hidden;
+    }
+
+    .volunteer-profile-hero {
+        padding: 2.5rem;
+        background: linear-gradient(135deg, rgba(125, 28, 34, .95), rgba(173, 36, 48, .92));
+        color: white;
+    }
+
+    .volunteer-profile-photo,
+    .volunteer-profile-photo-placeholder {
+        width: 180px;
+        height: 180px;
+        border-radius: 24px;
+    }
+
+    .volunteer-profile-photo {
+        object-fit: cover;
+        background: white;
+        border: 5px solid rgba(255,255,255,.2);
+    }
+
+    .volunteer-profile-photo-placeholder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        background: rgba(255,255,255,.12);
+        border: 5px solid rgba(255,255,255,.2);
+    }
+
+    .profile-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .55rem 1rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.18);
+        font-weight: 600;
+    }
+
+    .detail-card {
+        border: 1px solid rgba(125, 28, 34, .08);
+        border-radius: 22px;
+        background: white;
+        padding: 1.5rem;
+        height: 100%;
+        box-shadow: 0 14px 30px rgba(125, 28, 34, .06);
+    }
+
+    .detail-label {
+        display: block;
+        font-size: .82rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: #8e8a90;
+        margin-bottom: .35rem;
+    }
+
+    .detail-value {
+        color: #352e32;
+        font-weight: 600;
+        word-break: break-word;
+    }
+</style>
+
+<div class="container-xxl py-5 volunteer-details-page">
+    <div class="container">
+        @if (isLoading)
+        {
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3 text-muted">Loading volunteer profile...</p>
+            </div>
+        }
+        else if (!string.IsNullOrWhiteSpace(loadError))
+        {
+            <div class="alert alert-danger rounded-4">@loadError</div>
+        }
+        else if (volunteer is null)
+        {
+            <div class="alert alert-warning rounded-4">Volunteer profile not found.</div>
+        }
+        else
+        {
+            <div class="volunteer-profile-shell">
+                <div class="volunteer-profile-hero">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-auto text-center text-lg-start">
+                            @if (!string.IsNullOrWhiteSpace(photoDataUri))
+                            {
+                                <img src="@photoDataUri" alt="@volunteer.FullNameEn" class="volunteer-profile-photo" />
+                            }
+                            else
+                            {
+                                <div class="volunteer-profile-photo-placeholder">
+                                    <i class="fa fa-user"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-lg">
+                            <a href="/volunteers" class="btn btn-light btn-sm rounded-pill mb-3"><i class="fa fa-arrow-left me-2"></i>Back to volunteer directory</a>
+                            <h1 class="display-6 mb-2">@volunteer.FullNameEn</h1>
+                            <p class="fs-5 mb-3 opacity-75">@volunteer.FullNameBn</p>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="profile-badge"><i class="fa fa-tint"></i>@volunteer.BloodGroupName</span>
+                                <span class="profile-badge"><i class="fa fa-user"></i>@volunteer.GenderName</span>
+                                <span class="profile-badge"><i class="fa fa-check-circle"></i>@(volunteer.Active ? "Active volunteer" : "Inactive volunteer")</span>
+                            </div>
+                            <p class="mb-0 opacity-75">This profile contains the volunteer's photo, personal details, campaign activity, and contact information from the official registration record.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 p-lg-5">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6 col-xl-3">
+                            <div class="detail-card text-center">
+                                <div class="display-6 text-primary fw-bold">@volunteer.BloodDonationsCount</div>
+                                <div class="text-muted">Blood donations</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3">
+                            <div class="detail-card text-center">
+                                <div class="display-6 text-primary fw-bold">@volunteer.GroupingCampParticipationCount</div>
+                                <div class="text-muted">Grouping camps joined</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3">
+                            <div class="detail-card text-center">
+                                <div class="display-6 text-primary fw-bold">@GetAge(volunteer.DateOfBirth)</div>
+                                <div class="text-muted">Years old</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3">
+                            <div class="detail-card text-center">
+                                <div class="display-6 text-primary fw-bold">@volunteer.VolunteerId</div>
+                                <div class="text-muted">Volunteer ID</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="detail-card">
+                                <h4 class="mb-4">Personal information</h4>
+                                <div class="row g-3">
+                                    @DetailItem("Full name (English)", volunteer.FullNameEn)
+                                    @DetailItem("Full name (Bangla)", volunteer.FullNameBn)
+                                    @DetailItem("Father's name (English)", volunteer.FatherNameEn)
+                                    @DetailItem("Father's name (Bangla)", volunteer.FatherNameBn)
+                                    @DetailItem("Mother's name (English)", volunteer.MotherNameEn)
+                                    @DetailItem("Mother's name (Bangla)", volunteer.MotherNameBn)
+                                    @DetailItem("Date of birth", volunteer.DateOfBirth.ToString("dd MMM yyyy"))
+                                    @DetailItem("Gender", volunteer.GenderName)
+                                    @DetailItem("Blood group", volunteer.BloodGroupName)
+                                    @DetailItem("Unit committee", volunteer.UnitCommitteeName)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="detail-card">
+                                <h4 class="mb-4">Contact and address</h4>
+                                <div class="row g-3">
+                                    @DetailItem("Phone number", volunteer.PhoneNumber)
+                                    @DetailItem("WhatsApp number", volunteer.WhatsAppNumber)
+                                    @DetailItem("Email", volunteer.Email)
+                                    @DetailItem("Village", volunteer.VillageName)
+                                    @DetailItem("Post office", volunteer.PostOfficeName)
+                                    @DetailItem("Thana", volunteer.ThanaName)
+                                    @DetailItem("Zilla", volunteer.ZillaName)
+                                    @DetailItem("Division", volunteer.DivisionName)
+                                    @DetailItem("Full address", GetFullAddress(volunteer), 12)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="detail-card">
+                                <h4 class="mb-4">Contribution summary</h4>
+                                <div class="row g-3">
+                                    @DetailItem("Blood donations count", volunteer.BloodDonationsCount.ToString())
+                                    @DetailItem("Grouping camp participation", volunteer.GroupingCampParticipationCount.ToString())
+                                    @DetailItem("Status", volunteer.Active ? "Active" : "Inactive")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="detail-card">
+                                <h4 class="mb-4">Record metadata</h4>
+                                <div class="row g-3">
+                                    @DetailItem("Volunteer ID", volunteer.VolunteerId.ToString())
+                                    @DetailItem("Created date", volunteer.CreatedDate.ToString("dd MMM yyyy hh:mm tt"))
+                                    @DetailItem("Updated date", volunteer.UpdatedDate?.ToString("dd MMM yyyy hh:mm tt") ?? "Not updated yet")
+                                    @DetailItem("Photo location", volunteer.PhotoLocation)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int VolunteerId { get; set; }
+
+    private bool isLoading = true;
+    private string? loadError;
+    private CampaignVolunteerProfileDto? volunteer;
+    private string? photoDataUri;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        isLoading = true;
+        loadError = null;
+        volunteer = null;
+        photoDataUri = null;
+
+        try
+        {
+            var response = await CampaignVolunteerProfileService.GetVolunteerProfileAsync(VolunteerId);
+            if (response?.RESPONSE_CODE == ConfigClass.SUCCESS && response.Volunteer != null)
+            {
+                volunteer = response.Volunteer;
+                photoDataUri = BuildPhotoDataUri(volunteer.PhotoMimeType, volunteer.PhotoBase64);
+            }
+            else
+            {
+                loadError = response?.RESPONSE_DESCRPTION ?? "Unable to load volunteer profile.";
+            }
+        }
+        catch
+        {
+            loadError = "Unable to load volunteer profile.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private static RenderFragment DetailItem(string label, string? value, int columnSize = 6) => builder =>
+    {
+        var sequence = 0;
+        builder.OpenElement(sequence++, "div");
+        builder.AddAttribute(sequence++, "class", $"col-md-{columnSize}");
+        builder.OpenElement(sequence++, "span");
+        builder.AddAttribute(sequence++, "class", "detail-label");
+        builder.AddContent(sequence++, label);
+        builder.CloseElement();
+        builder.OpenElement(sequence++, "div");
+        builder.AddAttribute(sequence++, "class", "detail-value");
+        builder.AddContent(sequence++, string.IsNullOrWhiteSpace(value) ? "Not provided" : value);
+        builder.CloseElement();
+        builder.CloseElement();
+    };
+
+    private static int GetAge(DateTime dateOfBirth)
+    {
+        var today = DateTime.Today;
+        var age = today.Year - dateOfBirth.Year;
+        if (dateOfBirth.Date > today.AddYears(-age))
+        {
+            age--;
+        }
+
+        return age;
+    }
+
+    private static string GetFullAddress(CampaignVolunteerProfileDto profile)
+    {
+        return string.Join(", ", new[]
+        {
+            profile.VillageName,
+            profile.PostOfficeName,
+            profile.ThanaName,
+            profile.ZillaName,
+            profile.DivisionName
+        }.Where(value => !string.IsNullOrWhiteSpace(value)));
+    }
+
+    private static string? BuildPhotoDataUri(string? photoMimeType, string? photoBase64)
+    {
+        if (string.IsNullOrWhiteSpace(photoBase64))
+        {
+            return null;
+        }
+
+        return $"data:{(string.IsNullOrWhiteSpace(photoMimeType) ? "image/jpeg" : photoMimeType)};base64,{photoBase64}";
+    }
+}

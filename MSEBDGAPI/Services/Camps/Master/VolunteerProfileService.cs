@@ -1,23 +1,22 @@
 using Domain.CampsModels.RespDTO;
 using Domain.Core;
 using Microsoft.AspNetCore.StaticFiles;
-using Shared.CampsClient.Master;
 
-namespace MSEBDGCP.Services;
+namespace MSEBDGAPI.Services.Camps.Master;
 
 public class VolunteerProfileService
 {
     private readonly CampaignVolunteerService _campaignVolunteerService;
-    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IHostEnvironment _hostEnvironment;
     private readonly IConfiguration _configuration;
 
     public VolunteerProfileService(
         CampaignVolunteerService campaignVolunteerService,
-        IWebHostEnvironment webHostEnvironment,
+        IHostEnvironment hostEnvironment,
         IConfiguration configuration)
     {
         _campaignVolunteerService = campaignVolunteerService;
-        _webHostEnvironment = webHostEnvironment;
+        _hostEnvironment = hostEnvironment;
         _configuration = configuration;
     }
 
@@ -50,13 +49,28 @@ public class VolunteerProfileService
                 VolunteerId = volunteer.VolunteerId,
                 FullNameEn = volunteer.FullNameEn,
                 FullNameBn = volunteer.FullNameBn,
-                ThanaName = volunteer.ThanaName,
-                ZillaName = volunteer.ZillaName,
+                FatherNameEn = volunteer.FatherNameEn,
+                FatherNameBn = volunteer.FatherNameBn,
+                MotherNameEn = volunteer.MotherNameEn,
+                MotherNameBn = volunteer.MotherNameBn,
+                GenderName = volunteer.GenderName,
+                BloodGroupName = volunteer.BloodGroupName,
                 DivisionName = volunteer.DivisionName,
+                ZillaName = volunteer.ZillaName,
+                ThanaName = volunteer.ThanaName,
+                VillageName = volunteer.VillageName,
+                PostOfficeName = volunteer.PostOfficeName,
+                PhoneNumber = volunteer.PhoneNumber,
+                WhatsAppNumber = volunteer.WhatsAppNumber,
                 Email = volunteer.Email,
+                DateOfBirth = volunteer.DateOfBirth,
                 UnitCommitteeName = volunteer.UnitCommitteeName,
                 BloodDonationsCount = volunteer.BloodDonationsCount,
                 GroupingCampParticipationCount = volunteer.GroupingCampParticipationCount,
+                Active = volunteer.Active,
+                CreatedDate = volunteer.CreatedDate,
+                UpdatedDate = volunteer.UpdatedDate,
+                PhotoLocation = volunteer.PhotoLocation,
                 PhotoBase64 = photoBase64,
                 PhotoMimeType = photoMimeType
             };
@@ -89,27 +103,33 @@ public class VolunteerProfileService
 
     private string? ResolvePhotoPath(int volunteerId, string? photoLocation)
     {
+        var controlPanelWebRoot = Path.GetFullPath(Path.Combine(_hostEnvironment.ContentRootPath, "..", "MSEBDGCP", "wwwroot"));
+        var imageRootPath = Path.GetFullPath(_configuration["VolunteerImageStorage:RootPath"]
+            ?? Path.Combine(controlPanelWebRoot, "images", "volunteers"));
+
         if (!string.IsNullOrWhiteSpace(photoLocation))
         {
             var relativePath = photoLocation.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
-            var directPath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
+            var directPath = Path.Combine(controlPanelWebRoot, relativePath);
             if (File.Exists(directPath))
             {
                 return directPath;
             }
+
+            var fileName = Path.GetFileName(relativePath);
+            var filePathFromRoot = Path.Combine(imageRootPath, fileName);
+            if (File.Exists(filePathFromRoot))
+            {
+                return filePathFromRoot;
+            }
         }
 
-        var relativeFolder = (_configuration["VolunteerImageStorage:RelativePath"] ?? "images/volunteers")
-            .Trim('/')
-            .Replace('/', Path.DirectorySeparatorChar);
-        var physicalFolder = Path.Combine(_webHostEnvironment.WebRootPath, relativeFolder);
-
-        if (!Directory.Exists(physicalFolder))
+        if (!Directory.Exists(imageRootPath))
         {
             return null;
         }
 
-        return Directory.GetFiles(physicalFolder, $"{volunteerId}.*")
+        return Directory.GetFiles(imageRootPath, $"{volunteerId}.*")
             .OrderBy(path => path)
             .FirstOrDefault();
     }

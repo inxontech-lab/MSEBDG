@@ -81,6 +81,23 @@ namespace MSEBDGCP.Components.Pages.Camps
             }
         }
 
+        protected async Task ViewQrCode(CampaignVolunteerDto volunteer)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                [nameof(VolunteerQrDialog.VolunteerId)] = volunteer.VolunteerId,
+                [nameof(VolunteerQrDialog.VolunteerName)] = volunteer.FullNameEn
+            };
+
+            await DialogService.OpenAsync<VolunteerQrDialog>("Volunteer QR Code", parameters, new DialogOptions
+            {
+                Width = "520px",
+                Resizable = true,
+                Draggable = true,
+                CloseDialogOnOverlayClick = true
+            });
+        }
+
         protected async Task DeleteVolunteer(int volunteerId, string volunteerName)
         {
             bool? confirmed = await DialogService.Confirm(

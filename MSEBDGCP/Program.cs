@@ -1,5 +1,4 @@
 using MSEBDGCP.Components;
-using MSEBDGCP.Services;
 using Radzen;
 using Shared;
 using Shared.CampsClient.CommonForms;
@@ -12,8 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddControllers();
-
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
@@ -24,7 +21,6 @@ builder.Services.AddScoped<AddressService>();
 builder.Services.AddScoped<BloodGroupService>();
 builder.Services.AddScoped<CampTypeService>();
 builder.Services.AddScoped<CampaignVolunteerService>();
-builder.Services.AddScoped<VolunteerProfileService>();
 builder.Services.AddScoped<CountryService>();
 builder.Services.AddScoped<FemaleQuestionService>();
 builder.Services.AddScoped<GenderService>();
@@ -52,8 +48,6 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
-app.MapControllers();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

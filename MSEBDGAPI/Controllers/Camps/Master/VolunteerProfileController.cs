@@ -1,8 +1,8 @@
 using Domain.CampsModels.RespDTO;
 using Microsoft.AspNetCore.Mvc;
-using MSEBDGCP.Services;
+using MSEBDGAPI.Services.Camps.Master;
 
-namespace MSEBDGCP.Controllers;
+namespace CampsAPI.Controllers.Master;
 
 [ApiController]
 public class VolunteerProfileController : ControllerBase

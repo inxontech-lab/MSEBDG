@@ -1,0 +1,57 @@
+@using QRCoder
+@using Domain.CampsModels.RespDTO
+@inject IConfiguration Configuration
+
+<div class="text-center p-2">
+    <h4 class="mb-2">@VolunteerName</h4>
+    <p class="text-muted mb-4">Scan the QR code to open the volunteer details page on the public website.</p>
+
+    @if (string.IsNullOrWhiteSpace(qrCodeDataUri))
+    {
+        <RadzenAlert AlertStyle="AlertStyle.Warning" Variant="Variant.Outlined" Shade="Shade.Lighter">
+            Unable to generate the QR code because the public volunteer website address is not configured.
+        </RadzenAlert>
+    }
+    else
+    {
+        <img src="@qrCodeDataUri" alt="QR code for @VolunteerName" style="width:260px; max-width:100%; border-radius:18px; border:1px solid #ececec; padding:12px; background:#fff; box-shadow:0 12px 28px rgba(0,0,0,.08);" />
+        <div class="mt-4 text-start">
+            <label class="form-label fw-semibold">Volunteer details URL</label>
+            <div class="form-control" style="height:auto; word-break:break-all;">@detailsUrl</div>
+        </div>
+        <div class="small text-muted mt-3 text-start">
+            Configure <code>PublicUrls:VolunteerWebsiteBaseAddress</code> in <code>MSEBDGCP/appsettings*.json</code> for the correct environment.
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int VolunteerId { get; set; }
+    [Parameter] public string VolunteerName { get; set; } = string.Empty;
+
+    private string? detailsUrl;
+    private string? qrCodeDataUri;
+
+    protected override void OnParametersSet()
+    {
+        var baseAddress = Configuration["PublicUrls:VolunteerWebsiteBaseAddress"]?.TrimEnd('/');
+        if (string.IsNullOrWhiteSpace(baseAddress))
+        {
+            detailsUrl = null;
+            qrCodeDataUri = null;
+            return;
+        }
+
+        detailsUrl = $"{baseAddress}/volunteers/{VolunteerId}";
+        qrCodeDataUri = BuildQrCodeDataUri(detailsUrl);
+    }
+
+    private static string BuildQrCodeDataUri(string url)
+    {
+        using var generator = new QRCodeGenerator();
+        using var data = generator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new PngByteQRCode(data);
+        var bytes = qrCode.GetGraphic(20);
+        return $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
+    }
+}

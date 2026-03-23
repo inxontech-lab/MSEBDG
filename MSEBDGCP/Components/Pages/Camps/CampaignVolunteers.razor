@@ -47,8 +47,9 @@
                     }
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn Title="Actions" Width="120px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn Title="Actions" Width="190px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                 <Template Context="item">
+                    <RadzenButton Icon="qr_code_2" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => ViewQrCode(item))" Style="margin-right:6px;" />
                     <RadzenButton Icon="edit" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => OpenEditDialog(item.VolunteerId))" Style="margin-right:6px;" />
                     <RadzenButton Icon="delete" Size="ButtonSize.Small" Class="msebdg-action-button" Click="@(args => DeleteVolunteer(item.VolunteerId, item.FullNameEn))" />
                 </Template>
