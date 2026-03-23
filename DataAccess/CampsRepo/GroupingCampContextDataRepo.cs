@@ -56,7 +56,6 @@ namespace DataAccess.CampsRepo
                    join district in _MsebdgcampsContext.Districts on volunteer.ZillaId equals district.Id
                    join upazila in _MsebdgcampsContext.Upazilas on volunteer.ThanaId equals upazila.Id
                    join union in _MsebdgcampsContext.Unions on volunteer.VillageId equals union.Id into unionGroup
-                   from union in unionGroup.DefaultIfEmpty()
                    select new CampaignVolunteerDto
                    {
                        VolunteerId = volunteer.VolunteerId,
@@ -77,7 +76,7 @@ namespace DataAccess.CampsRepo
                        ThanaId = volunteer.ThanaId,
                        ThanaName = upazila.Name,
                        VillageId = volunteer.VillageId,
-                       VillageName = union != null ? union.Name : string.Empty,
+                       VillageName = unionGroup.Select(u => u.Name).FirstOrDefault() ?? string.Empty,
                        PostOfficeName = volunteer.PostOfficeName,
                        PhoneNumber = volunteer.PhoneNumber,
                        WhatsAppNumber = volunteer.WhatsAppNumber,
