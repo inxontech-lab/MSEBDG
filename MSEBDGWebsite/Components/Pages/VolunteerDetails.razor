@@ -194,14 +194,14 @@
                             <p class="mb-0 opacity-75">This profile contains the volunteer's photo, personal details, campaign activity, and contact information from the official registration record.</p>
                         </div>
                         <div class="col-lg-auto text-center">
-                            @* @if (!string.IsNullOrWhiteSpace(qrCodeDataUri))
+                            @if (!string.IsNullOrWhiteSpace(qrCodeDataUri))
                             {
                                 <div class="volunteer-qr-card">
                                     <img src="@qrCodeDataUri" alt="QR code for @volunteer.FullNameEn" class="volunteer-qr-image" />
                                     <div class="fw-semibold mt-3">Scan to open this profile</div>
                                     <div class="small text-muted mt-1">Volunteer details QR code</div>
                                 </div>
-                            } *@
+                            }
                         </div>
                     </div>
                 </div>
