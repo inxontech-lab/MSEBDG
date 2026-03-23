@@ -1,6 +1,6 @@
 <style>
     .volunteer-header-shell {
-        background: rgba(0, 0, 0, 0.92);
+        background: #062b2d;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
 
@@ -9,6 +9,11 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: #fff;
+    }
+
+    .volunteer-brand-accent,
+    .volunteer-header-link-active {
+        color: #FF6F0F !important;
     }
 
     .volunteer-header-text,
@@ -22,20 +27,21 @@
 
     .volunteer-header-link:hover,
     .volunteer-header-link:focus {
-        color: #ffca2c !important;
+        color: #FF6F0F !important;
     }
 
     .volunteer-header-action {
-        color: #fff;
-        border-color: rgba(255,255,255,0.85);
+        color: #FF6F0F;
+        border: 1px solid #FF6F0F;
         background: transparent;
+        font-weight: 600;
     }
 
     .volunteer-header-action:hover,
     .volunteer-header-action:focus {
         color: #fff;
-        border-color: #fff;
-        background: rgba(255,255,255,0.12);
+        border-color: #FF6F0F;
+        background: #FF6F0F;
     }
 
     .volunteer-header-toggle {
@@ -71,8 +77,8 @@
                 <img src="images/cropped_circle_image.png" style="height: 50px;">
                 <img src="images/app_logo3.png" style="height: 60px;">
                 <h4 class="fw-bold m-0 volunteer-brand-title">
-                    Maizbhandari Shah Emdadia<br class="d-lg-none">
-                    <span class="text-primary">Blood Donors Group</span>
+                    Maizbhandari Shah Emdadia
+                    <span class="volunteer-brand-accent">Blood Donors Group</span>
                 </h4>
             </a>
         </div>
@@ -83,7 +89,7 @@
         <div class="collapse navbar-collapse" id="volunteerNavbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="/" class="nav-item nav-link volunteer-header-link">Home</a>
-                <a href="/volunteers" class="nav-item nav-link volunteer-header-link">Volunteers</a>
+                <a href="/volunteers" class="nav-item nav-link volunteer-header-link volunteer-header-link-active">Volunteers</a>
             </div>
             <div class="d-flex ms-lg-2 my-3 my-lg-0 justify-content-center">
                 <a class="btn py-2 px-3 volunteer-header-action" href="">
