@@ -157,7 +157,7 @@
 
     private CampaignVolunteer volunteer = new()
     {
-        DateOfBirth = DateTime.Today.AddYears(-18),
+        DateOfBirth = DateOnly.FromDateTime(DateTime.Today.AddYears(-18)),
         Active = true,
         VillageId = 0
     };
@@ -373,7 +373,7 @@
         volunteer = new CampaignVolunteer
         {
             VolunteerId = VolunteerId,
-            DateOfBirth = DateTime.Today.AddYears(-18),
+            DateOfBirth = DateOnly.FromDateTime(DateTime.Today.AddYears(-18)),
             Active = true,
             VillageId = 0
         };
