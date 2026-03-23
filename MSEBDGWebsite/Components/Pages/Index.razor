@@ -1,216 +1,126 @@
-﻿@page "/"
+@page "/"
 
+<style>
+    .carousel-caption {
+        background: rgba(0, 0, 0, 0.3);
+    }
 
-<!DOCTYPE html>
-<html lang="en">
+    .speaker-card {
+        background: #f8f8f8;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        padding: 30px;
+        transition: all 0.3s ease;
+    }
 
-<head>
-@*     <meta charset="utf-8">
-    <title>ChariTeam - Free Nonprofit Website Template</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description"> *@
-    <style>
-        .brand-title {
-            max-width: 65vw;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-shadow: 0 0 5px rgba(0,0,0,0.3); /* glow for visibility */
+        .speaker-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
         }
 
-        .carousel-caption {
-            /* background: transparent !important; */
-            background: rgba(0, 0, 0, 0.3);
+        .speaker-card img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
         }
 
+    #header-carousel,
+    .carousel-inner,
+    .carousel-item {
+        height: 100vh;
+    }
 
-        .navigation-menu.primary--menu > ul > li > a {
-            font-size: 14px; /* adjust size as needed */
-            font-weight: 500; /* optional: control thickness */
-            line-height: 1.2; /* keeps it compact */
-            color: #ffffff; /* white text */
-            text-shadow: 0 0 5px rgba(0,0,0,0.3); /* glow for visibility */
-        }
+    .carousel-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
 
-        .fade-logo {
-            transition: opacity 1.5s ease-in-out;
-        }
+<!-- Carousel Start -->
+<div class="container-fluid p-0 mb-5">
+    <div id="header-carousel" class="carousel slide">
+        <div class="carousel-inner">
 
-        .dim {
-            opacity: 0.4;
-        }
+            <div class="carousel-item active">
+                <video class="carousel-video"
+                       autoplay
+                       muted
+                       loop
+                       playsinline>
+                    <source src="images/Banner/Banner.mp4" type="video/mp4">
+                </video>
 
-        .speaker-card {
-            background: #f8f8f8;
-            border-radius: 10px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-            padding: 30px;
-            transition: all 0.3s ease;
-        }
-
-            .speaker-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 5px 20px rgba(0,0,0,0.12);
-            }
-
-            .speaker-card img {
-                border-radius: 50%;
-                width: 150px;
-                height: 150px;
-                object-fit: cover;
-            }
-            #header-carousel,
-            .carousel-inner,
-            .carousel-item {
-                height: 100vh;
-            }
-
-            .carousel-video {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-    </style>
-
-    <script>
-        setInterval(() => {
-            const logo = document.querySelector(".fade-logo");
-            logo.classList.toggle("dim");
-        }, 1500);
-    </script>
-</head>
-
-<body>
-    <!-- Spinner Start -->
-@*     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-grow text-primary" role="status"></div>
-    </div> *@
-    <!-- Spinner End -->
-    <!-- Navbar Start -->
-    <div class="container-fluid fixed-top px-0 wow fadeIn" data-wow-delay="0.1s">
-        <div class="top-bar text-white-50 row gx-0 align-items-center
-            d-flex flex-column flex-lg-row">
-
-            <div class="col-12 col-lg-6 px-3 px-lg-5 text-center text-lg-start mb-2 mb-lg-0"
-                 style="text-shadow: 0 0 5px rgba(0,0,0,0.3);">
-                <small>
-                    <i class="fa fa-map-marker-alt me-2"></i>
-                    South Khulshi, Chattogram, Bangladesh
-                </small>
-                <br class="d-lg-none">
-                <small class="ms-lg-4">
-                    <i class="fa fa-envelope me-2"></i>
-                    admin@diri.org.bd
-                </small>
-            </div>
-
-            <div class="col-12 col-lg-6 px-3 px-lg-5 text-center text-lg-end"
-                 style="text-shadow: 0 0 5px rgba(0,0,0,0.3);">
-                <small>Follow us:</small>
-                <a class="text-white-50 ms-3" href="#">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-            </div>
-
-        </div>
-
-
-        <nav class="navbar navbar-expand-lg navbar-dark py-lg-0 px-lg-5 wow fadeIn" data-wow-delay="0.1s">
-            <div>
-                @* <a href="index.html" class="navbar-brand d-flex align-items-center ms-4 ms-lg-0">
-                    <img src="images/cropped_circle_image.png" alt="Logo" class="fade-logo"
-                         style="height: 60px; margin-right:5px;">
-                    <img src="images/app_logo3.png" alt="Logo"
-                         style="height: 80px; margin-right: 12px;">
-                    <h4 class="fw-bold m-0 brand-title text-white">
-                        Maizbhandari Shah Emdadia
-                        <span class="text-primary">Blood Donors Group</span>
-                    </h4>
-                </a> *@
-
-                <a href="index.html" class="navbar-brand d-flex align-items-center ms-3 ms-lg-0">
-                    <img src="images/cropped_circle_image.png" class="fade-logo"
-                         style="height: 50px;">
-
-                    <img src="images/app_logo3.png" 
-                         style="height: 60px;">
-
-                    <h4 class="fw-bold m-0 brand-title text-white">
-                        Maizbhandari Shah Emdadia<br class="d-lg-none">
-                        <span class="text-primary">Blood Donors Group</span>
-                    </h4>
-                </a>
-            </div>
-
-            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse" style="text-shadow: 0 0 5px rgba(0,0,0,0.3);">
-                <div class="navbar-nav ms-auto p-4 p-lg-0">
-@*                     <a href="/" class="nav-item nav-link active">Home</a>
-                    <a href="/about" class="nav-item nav-link">About</a> *@
-                    <a href="/volunteers" class="nav-item nav-link">Volunteers</a>
-                </div>
-                <div class="d-flex ms-lg-2 my-3 my-lg-0 justify-content-center">
-                    <a class="btn btn-outline-primary py-2 px-3" href="">
-                        Register as Donor
-                        <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
-                            <i class="fa fa-arrow-right"></i>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!-- Navbar End -->
-    <!-- Carousel Start -->
-    <div class="container-fluid p-0 mb-5">
-        <div id="header-carousel" class="carousel slide">
-            <div class="carousel-inner">
-
-                <div class="carousel-item active">
-                    <video class="carousel-video"
-                           autoplay
-                           muted
-                           loop
-                           playsinline>
-                        <source src="images/Banner/Banner.mp4" type="video/mp4">
-                    </video>
-
-                    <div class="carousel-caption">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-7 pt-5 text-start">
-                                    <h1 class="display-4 text-white mb-3 animated slideInDown">
-                                        A Proud Celebration of 1K Units Life-Saving Blood Donations
-                                    </h1>
-                                    <h3 class="display-6 text-white animated slideInDown">
-                                        at United Arab Emirates
-                                    </h3>
-                                </div>
+                <div class="carousel-caption">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-7 pt-5 text-start">
+                                <h1 class="display-4 text-white mb-3 animated slideInDown">
+                                    A Proud Celebration of 1K Units Life-Saving Blood Donations
+                                </h1>
+                                <h3 class="display-6 text-white animated slideInDown">
+                                    at United Arab Emirates
+                                </h3>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
             </div>
+
         </div>
     </div>
+</div>
 
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-4 align-items-center">
-                <div class="col-lg-8 wow fadeInUp">
-                    <div class="bg-light rounded-4 p-4 p-lg-5 shadow-sm">
-                        <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Volunteer Network</div>
-                        <h2 class="mb-3">Discover the volunteers behind our blood grouping campaigns.</h2>
-                        <p class="mb-0">Browse our campaign volunteer directory to see the people serving communities across divisions, zillas, thanas, and villages.</p>
-                    </div>
+<!-- Carousel End -->
+
+<div class="container text-center">
+    <div class="row text-center">
+        <div class="col-lg-6 col-md-6 mb-4 wow fadeInUp" data-wow-delay="0.3s">
+            <h2 class="section-title">Chief Patron</h2>
+            <div class="wow fadeInUp" data-wow-delay="0.3s">
+                <div class="speaker-card">
+                    <img src="images/Chief-Patron.jpg" alt="Syed Emdadul Haque Maizbhandari">
+                    <h5 class="mt-3 mb-1">Syed Emdadul Haque Maizbhandari</h5>
+                    <p>Chief Patron</p>
                 </div>
-                <div class="col-lg-4 text-lg-end wow fadeInUp">
-                    <a href="/volunteers" class="btn btn-primary py-3 px-4">
-                        View Volunteers
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-4 wow fadeInUp" data-wow-delay="0.3s">
+            <h2 class="section-title">Patron</h2>
+            <div class="wow fadeInUp" data-wow-delay="0.5s">
+                <div class="speaker-card">
+                    <img src="images/Patron.jpg" alt=" Syed Irfanul Haque Maizbhandari">
+                    <h5 class="mt-3 mb-1"> Syed Irfanul Haque Maizbhandari</h5>
+                    <p>Patron</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- About Start -->
+<div class="container-xxl py-5" id="about-us">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="position-relative overflow-hidden h-100" style="min-height: 400px;">
+                    <img class="position-absolute w-100 h-100 pt-5 pe-5" src="images/Homepage/img1.jpg" alt="" style="object-fit: cover;">
+                    <img class="position-absolute top-0 end-0 bg-white ps-2 pb-2" src="images/Chief-Patron.jpg" alt="" style="width: 200px; height: 200px;">
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="h-100">
+                    <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">About Us</div>
+                    <h1 class="display-6 mb-5">We Help People In Need Around The World</h1>
+                    <div class="bg-light border-bottom border-5 border-primary rounded p-4 mb-4">
+                        <p class="text-dark mb-2">Saving the life of one person is like saving the life of an entire nation.</p>
+                        <span class="text-primary">Surah al-Maida, 32</span>
+                    </div>
+                    <p class="mb-5">Around this message of the Qur'an, various thinkers were engaged in the welfare of the society by sacrificing themselves through human service. To unite the brothers of the Maizbhandari Tariqa in social movements like blood donation and stand beside the sick and helpless humanity to alleviate human suffering and express gratitude to the Creator.</p>
+                    <a class="btn btn-primary py-2 px-3 me-3" href="/about-us">
+                        More Details
                         <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
                             <i class="fa fa-arrow-right"></i>
                         </div>
@@ -219,521 +129,398 @@
             </div>
         </div>
     </div>
-
-    <!-- Carousel End -->
-
-
-    <div class="container text-center">
-            <div class="row text-center">
-                <div class="col-lg-6 col-md-6 mb-4 wow fadeInUp" data-wow-delay="0.3s">
-                    <h2 class="section-title">Chief Patron</h2>
-                    <div class="wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="speaker-card">
-                            <img src="images/Chief-Patron.jpg" alt="Syed Emdadul Haque Maizbhandari">
-                            <h5 class="mt-3 mb-1">Syed Emdadul Haque Maizbhandari</h5>
-                            <p>Chief Patron</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 mb-4 wow fadeInUp" data-wow-delay="0.3s">
-                    <h2 class="section-title">Patron</h2>
-                    <div class="wow fadeInUp" data-wow-delay="0.5s">
-                        <div class="speaker-card">
-                            <img src="images/Patron.jpg" alt=" Syed Irfanul Haque Maizbhandari">
-                            <h5 class="mt-3 mb-1"> Syed Irfanul Haque Maizbhandari</h5>
-                            <p>Patron</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+</div>
+<!-- About End -->
+<!-- Causes Start -->
+<div class="container-xxl bg-light my-5 py-5">
+    <div class="container py-5">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Recent Camps</div>
+            <h1 class="display-6 mb-5">Recent Voluntary Blood Donation Camps</h1>
         </div>
-
-    @* <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-10 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="h-100">
-                        <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">About Us</div>
-                        <h1 class="display-6 mb-5">We Help People In Need Around The World</h1>
-                        <div class="bg-light border-bottom border-5 border-primary rounded p-4 mb-4">
-                            <p class="text-dark mb-2">
-                                In the Holy Qur'an Allah says - "Saving the life of one person is like saving the life of an entire nation." Surah al-Maida, 32. Around this message of the Qur'an, various thinkers were engaged in the welfare of the society by sacrificing themselves through human service.
-
-                                To unite the brothers of the Maizbhandari Tariqa in social movements like blood donation and stand beside the sick and helpless humanity to alleviate human suffering and express gratitude to the Creator.
-
-                                Sajjadanshine Durbare Gawthul Azam, Rahnumaye Shariat and Tariqat Alhaj Hazrat Mawlana Shahsufi Syed Emdadul Haque Maizbhandari (M. G. A) Sahib, formed for human welfare, the members of Maizbhandari Shah Emdadiya Blood Donors Group are engaged in the service of humanity by donating their blood in special and necessary moments.
-
-                                Working for the welfare of humanity is being done by encouraging everyone to participate in protecting the balance of health and environment.
-
-                                Because of many superstitions we think that donating blood is harmful, but this idea is wrong.The members of the organization encourage and organize themselves and brothers of various youth, students and professions to prepare and store lists of blood group identification, addresses and telephone numbers of the elders, which is serving as a data center. Later blood recipients can collect blood easily by collecting information about blood donors from the data center.
-                                Maizbhandari Shah Emdadia Blood Donors Group aims to form a social movement through collective efforts to balance health and environment. Various media are spreading the information of Blood Donors Group and other similar organizations are meeting the need of blood by creating bridges of friendship with all including blood donors and recipients.
-                            </p>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
+                    <div class="text-center p-4 pt-0">
+                        <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
+                            <small>Qatar</small>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> *@
-
-    <!-- About Start -->
-    <div class="container-xxl py-5" id="about-us">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="position-relative overflow-hidden h-100" style="min-height: 400px;">
-                        <img class="position-absolute w-100 h-100 pt-5 pe-5" src="images/Homepage/img1.jpg" alt="" style="object-fit: cover;">
-                        <img class="position-absolute top-0 end-0 bg-white ps-2 pb-2" src="images/Chief-Patron.jpg" alt="" style="width: 200px; height: 200px;">
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="h-100">
-                        <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">About Us</div>
-                        <h1 class="display-6 mb-5">We Help People In Need Around The World</h1>
-                        <div class="bg-light border-bottom border-5 border-primary rounded p-4 mb-4">
-                            <p class="text-dark mb-2">Saving the life of one person is like saving the life of an entire nation.</p>
-                            <span class="text-primary">Surah al-Maida, 32</span>
-                        </div>
-                        <p class="mb-5">Around this message of the Qur'an, various thinkers were engaged in the welfare of the society by sacrificing themselves through human service. To unite the brothers of the Maizbhandari Tariqa in social movements like blood donation and stand beside the sick and helpless humanity to alleviate human suffering and express gratitude to the Creator.</p>
-                        <a class="btn btn-primary py-2 px-3 me-3" href="/about-us">
-                            More Details
-                            <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
-                                <i class="fa fa-arrow-right"></i>
+                        <h5 class="mb-3">Hamad Blood Donation Center</h5>
+                        <p>18th December 2025</p>
+                        <div class="causes-progress bg-light p-3 pt-2">
+                            <div class="d-flex justify-content-between">
+                                <p class="text-dark">220<small class="text-body"> Units Collected</small></p>
                             </div>
-                        </a>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span>216</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-relative mt-auto">
+                        <img class="img-fluid" src="images/QatarCamp/2025/2025_1.jpg" alt="">
+                        <div class="causes-overlay">
+                            <a class="btn btn-outline-primary" href="">
+                                View More
+                                <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
+                    <div class="text-center p-4 pt-0">
+                        <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
+                            <small>Abu Dhabi (UAE)</small>
+                        </div>
+                        <h5 class="mb-3">Abu Dhabi Blood Bank</h5>
+                        <p>2nd December 2025</p>
+                        <div class="causes-progress bg-light p-3 pt-2">
+                            <div class="d-flex justify-content-between">
+                                <p class="text-dark">303 <small class="text-body"> Units Collected</small></p>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span>303</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-relative mt-auto">
+                        <img class="img-fluid" src="images/UAECamp/2025/abudhabi.jpg" alt="">
+                        <div class="causes-overlay">
+                            <a class="btn btn-outline-primary" href="">
+                                View More
+                                <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
+                    <div class="text-center p-4 pt-0">
+                        <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
+                            <small>Al Ain (UAE)</small>
+                        </div>
+                        <h5 class="mb-3">Al Ain Blood Bank</h5>
+                        <p>3rd December 2025</p>
+                        <div class="causes-progress bg-light p-3 pt-2">
+                            <div class="d-flex justify-content-between">
+                                <p class="text-dark">110<small class="text-body"> Units Collected</small></p>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    <span>110</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-relative mt-auto">
+                        <img class="img-fluid" src="images/UAECamp/2025/Alain.jpg" alt="">
+                        <div class="causes-overlay">
+                            <a class="btn btn-outline-primary" href="">
+                                View More
+                                <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
+                                    <i class="fa fa-arrow-right"></i>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- About End -->
-    <!-- Causes Start -->
-    <div class="container-xxl bg-light my-5 py-5">
-        <div class="container py-5">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Recent Camps</div>
-                <h1 class="display-6 mb-5">Recent Voluntary Blood Donation Camps</h1>
+</div>
+<!-- Causes End -->
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-8 wow fadeInUp">
+                <div class="bg-light rounded-4 p-4 p-lg-5 shadow-sm">
+                    <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Volunteer Network</div>
+                    <h2 class="mb-3">Discover the volunteers behind our blood grouping campaigns.</h2>
+                    <p class="mb-0">Browse our campaign volunteer directory to see the people serving communities across divisions, zillas, thanas, and villages.</p>
+                </div>
             </div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
-                        <div class="text-center p-4 pt-0">
-                            <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
-                                <small>Qatar</small>
-                            </div>
-                            <h5 class="mb-3">Hamad Blood Donation Center</h5>
-                            <p>18th December 2025</p>
-                            <div class="causes-progress bg-light p-3 pt-2">
-                                <div class="d-flex justify-content-between">
-                                    <p class="text-dark">220<small class="text-body"> Units Collected</small></p>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                        <span>216</span>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="col-lg-4 text-lg-end wow fadeInUp">
+                <a href="/volunteers" class="btn btn-primary py-3 px-4">
+                    View Volunteers
+                    <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
+                        <i class="fa fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Service Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">What We Do</div>
+            <h1 class="display-6 mb-5">Learn More What We Do And Get Involved</h1>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
+                    <img class="img-fluid mb-4" src="images/OurCamps/tree.png" alt="">
+                    <h4 class="mb-3">Medicinal Tree Plantation</h4>
+                    <p class="mb-4">Medicinal tree plantation is a regular event of the goup</p>
+                    <a class="btn btn-outline-primary px-3" href="">
+                        Learn More
+                        <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
+                            <i class="fa fa-arrow-right"></i>
                         </div>
-                        <div class="position-relative mt-auto">
-                            <img class="img-fluid" src="images/QatarCamp/2025/2025_1.jpg" alt="">
-                            <div class="causes-overlay">
-                                <a class="btn btn-outline-primary" href="">
-                                    View More
-                                    <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
+                    <img class="img-fluid mb-4" src="images/OurCamps/medical.png" alt="">
+                    <h4 class="mb-3">Free Medical Camp</h4>
+                    <p class="mb-4">Organizing free medical camps and providing free medicine</p>
+                    <a class="btn btn-outline-primary px-3" href="">
+                        Learn More
+                        <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
+                    <img class="img-fluid mb-4" src="images/OurCamps/blood.png" alt="">
+                    <br />
+                    <br />
+                    <h4 class="mb-3">Blood Grouping Camp</h4>
+                    <p class="mb-4">Free blood grouping campaign in the educational institutions</p>
+                    <a class="btn btn-outline-primary px-3" href="">
+                        Learn More
+                        <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
+                            <i class="fa fa-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Service End -->
+<!-- Donate Start img/carousel-2.jpg-->
+<div class="container-fluid donate my-5 py-5" data-parallax="scroll" data-image-src="images/Rawda.jpeg">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3"> Register to Donate</div>
+                <h1 class="display-6 text-white mb-5">Thanks For Visiting Us</h1>
+                <p class="text-white-50 mb-0">
+                    Please provide your details if you are willing to join us in this humanitarian activity.
+                    We are welcoming you onboard with our social heros.
+                </p>
+            </div>
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                <div class="h-100 bg-white p-5">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="name" placeholder="Your Name">
+                                    <label for="name">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="address" placeholder="Your Address">
+                                    <label for="email">Your Address</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="phone" placeholder="Your Contact number">
+                                    <label for="email">Your Contact number</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-light border-0" id="bloodgroup" placeholder="Blood Group">
+                                    <label for="email">Blood Group</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary px-5" style="height: 60px;">
+                                    Register
+                                    <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
                                         <i class="fa fa-arrow-right"></i>
                                     </div>
-                                </a>
+                                </button>
                             </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Donate End -->
+<!-- Team Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Coordinators</div>
+            <h1 class="display-6 mb-5">Let's Meet With Our Soldiers</h1>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="team-item position-relative rounded overflow-hidden">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="images/Coordinator/Bappa.jpg" alt="">
+                    </div>
+                    <div class="team-text bg-light text-center p-4">
+                        <h5>Dawud</h5>
+                        <p class="text-primary">United Arab Emirates</p>
+                        <div class="team-social text-center">
+                            <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
-                        <div class="text-center p-4 pt-0">
-                            <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
-                                <small>Abu Dhabi (UAE)</small>
-                            </div>
-                            <h5 class="mb-3">Abu Dhabi Blood Bank</h5>
-                            <p>2nd December 2025</p>
-                            <div class="causes-progress bg-light p-3 pt-2">
-                                <div class="d-flex justify-content-between">
-                                    <p class="text-dark">303 <small class="text-body"> Units Collected</small></p>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                        <span>303</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="position-relative mt-auto">
-                            <img class="img-fluid" src="images/UAECamp/2025/abudhabi.jpg" alt="">
-                            <div class="causes-overlay">
-                                <a class="btn btn-outline-primary" href="">
-                                    View More
-                                    <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                        <i class="fa fa-arrow-right"></i>
-                                    </div>
-                                </a>
-                            </div>
+            </div>
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="team-item position-relative rounded overflow-hidden">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="images/Coordinator/Ismail.jpeg" alt="">
+                    </div>
+                    <div class="team-text bg-light text-center p-4">
+                        <h5>Ismail</h5>
+                        <p class="text-primary">United Arab Emirates</p>
+                        <div class="team-social text-center">
+                            <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
-                        <div class="text-center p-4 pt-0">
-                            <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
-                                <small>Al Ain (UAE)</small>
-                            </div>
-                            <h5 class="mb-3">Al Ain Blood Bank</h5>
-                            <p>3rd December 2025</p>
-                            <div class="causes-progress bg-light p-3 pt-2">
-                                <div class="d-flex justify-content-between">
-                                    <p class="text-dark">110<small class="text-body"> Units Collected</small></p>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                        <span>110</span>
-                                    </div>
-                                </div>
-                            </div>
+            </div>
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="team-item position-relative rounded overflow-hidden">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="images/Coordinator/Sazzad.jpeg" alt="">
+                    </div>
+                    <div class="team-text bg-light text-center p-4">
+                        <h5>Sazzad</h5>
+                        <p class="text-primary">State of Qatar</p>
+                        <div class="team-social text-center">
+                            <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
                         </div>
-                        <div class="position-relative mt-auto">
-                            <img class="img-fluid" src="images/UAECamp/2025/Alain.jpg" alt="">
-                            <div class="causes-overlay">
-                                <a class="btn btn-outline-primary" href="">
-                                    View More
-                                    <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                        <i class="fa fa-arrow-right"></i>
-                                    </div>
-                                </a>
-                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="team-item position-relative rounded overflow-hidden">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="images/Coordinator/Arman.jpeg" alt="">
+                    </div>
+                    <div class="team-text bg-light text-center p-4">
+                        <h5>Arman</h5>
+                        <p class="text-primary">United Arab Emirates</p>
+                        <div class="team-social text-center">
+                            <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+                <div class="team-item position-relative rounded overflow-hidden">
+                    <div class="overflow-hidden">
+                        <img class="img-fluid" src="images/Coordinator/Tanvir.jpeg" alt="">
+                    </div>
+                    <div class="team-text bg-light text-center p-4">
+                        <h5>Tanvir</h5>
+                        <p class="text-primary">United Arab Emirates</p>
+                        <div class="team-social text-center">
+                            <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Causes End -->
-    <!-- Service Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">What We Do</div>
-                <h1 class="display-6 mb-5">Learn More What We Do And Get Involved</h1>
+</div>
+<!-- Team End -->
+<!-- Testimonial Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+            <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Appreciation</div>
+            <h1 class="display-6 mb-5">Appreciated By Blood Banks and Research Centers</h1>
+        </div>
+        <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+            <div class="testimonial-item text-center">
+                <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
+                     src="images/Flags/Qatar.png" style="width: 100px; height: 100px;">
+                <div class="testimonial-text rounded text-center p-4">
+                    <img src="images/QatarCamp/2024/Certificate/Qatar 2024.jpg">
+                </div>
             </div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
-                        <img class="img-fluid mb-4" src="images/OurCamps/tree.png" alt="">
-                        <h4 class="mb-3">Medicinal Tree Plantation</h4>
-                        <p class="mb-4">Medicinal tree plantation is a regular event of the goup</p>
-                        <a class="btn btn-outline-primary px-3" href="">
-                            Learn More
-                            <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                <i class="fa fa-arrow-right"></i>
-                            </div>
-                        </a>
-                    </div>
+            <div class="testimonial-item text-center">
+                <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
+                     src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
+                <div class="testimonial-text rounded text-center p-4">
+                    <img src="images/UAECamp/2024/Certificate/UAE 2024 (1).jpeg">
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
-                        <img class="img-fluid mb-4" src="images/OurCamps/medical.png" alt="">
-                        <h4 class="mb-3">Free Medical Camp</h4>
-                        <p class="mb-4">Organizing free medical camps and providing free medicine</p>
-                        <a class="btn btn-outline-primary px-3" href="">
-                            Learn More
-                            <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                <i class="fa fa-arrow-right"></i>
-                            </div>
-                        </a>
-                    </div>
+            </div>
+            <div class="testimonial-item text-center">
+                <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
+                     src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
+                <div class="testimonial-text rounded text-center p-4">
+                    <img src="images/UAECamp/2024/Certificate/UAE 2024 (1).jpeg">
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
-                        <img class="img-fluid mb-4" src="images/OurCamps/blood.png" alt="">
-                        <br />
-                        <br />
-                        <h4 class="mb-3">Blood Grouping Camp</h4>
-                        <p class="mb-4">Free blood grouping campaign in the educational institutions</p>
-                        <a class="btn btn-outline-primary px-3" href="">
-                            Learn More
-                            <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                <i class="fa fa-arrow-right"></i>
-                            </div>
-                        </a>
-                    </div>
+            </div>
+            <div class="testimonial-item text-center">
+                <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
+                     src="images/Flags/Qatar.png" style="width: 100px; height: 100px;">
+                <div class="testimonial-text rounded text-center p-4">
+                    <img src="images/QatarCamp/2025/Certificate/Qatar_04-08-2025.png">
+                </div>
+            </div>
+            <div class="testimonial-item text-center">
+                <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
+                     src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
+                <div class="testimonial-text rounded text-center p-4">
+                    <img src="images/UAECamp/2024/Certificate/UAE 2024 (2).jpeg">
+                </div>
+            </div>
+            <div class="testimonial-item text-center">
+                <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
+                     src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
+                <div class="testimonial-text rounded text-center p-4">
+                    <img src="images/UAECamp/2024/Certificate/UAE 2024 (3).jpeg">
+                </div>
+            </div>
+            <div class="testimonial-item text-center">
+                <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
+                     src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
+                <div class="testimonial-text rounded text-center p-4">
+                    <img src="images/UAECamp/2024/Certificate/UAE 2024 (4).jpeg">
                 </div>
             </div>
         </div>
     </div>
-    <!-- Service End -->
-    <!-- Donate Start img/carousel-2.jpg-->
-    <div class="container-fluid donate my-5 py-5" data-parallax="scroll" data-image-src="images/Rawda.jpeg">
-        <div class="container py-5">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3"> Register to Donate</div>
-                    <h1 class="display-6 text-white mb-5">Thanks For Visiting Us</h1>
-                    <p class="text-white-50 mb-0">Please provide your details if you are willing to join us in this humanitarian activity.
-                        We are welcoming you onboard with our social heros.
-                    </p>
-                </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="h-100 bg-white p-5">
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control bg-light border-0" id="name" placeholder="Your Name">
-                                        <label for="name">Your Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control bg-light border-0" id="address" placeholder="Your Address">
-                                        <label for="email">Your Address</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control bg-light border-0" id="phone" placeholder="Your Contact number">
-                                        <label for="email">Your Contact number</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control bg-light border-0" id="bloodgroup" placeholder="Blood Group">
-                                        <label for="email">Blood Group</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary px-5" style="height: 60px;">
-                                        Register
-                                        <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
-                                            <i class="fa fa-arrow-right"></i>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Donate End -->
-    <!-- Team Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Coordinators</div>
-                <h1 class="display-6 mb-5">Let's Meet With Our Soldiers</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="images/Coordinator/Bappa.jpg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Dawud</h5>
-                            <p class="text-primary">United Arab Emirates</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="images/Coordinator/Ismail.jpeg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Ismail</h5>
-                            <p class="text-primary">United Arab Emirates</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="images/Coordinator/Sazzad.jpeg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Sazzad</h5>
-                            <p class="text-primary">State of Qatar</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="images/Coordinator/Arman.jpeg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Arman</h5>
-                            <p class="text-primary">United Arab Emirates</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="team-item position-relative rounded overflow-hidden">
-                        <div class="overflow-hidden">
-                            <img class="img-fluid" src="images/Coordinator/Tanvir.jpeg" alt="">
-                        </div>
-                        <div class="team-text bg-light text-center p-4">
-                            <h5>Tanvir</h5>
-                            <p class="text-primary">United Arab Emirates</p>
-                            <div class="team-social text-center">
-                                <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Team End -->
-    <!-- Testimonial Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Appreciation</div>
-                <h1 class="display-6 mb-5">Appreciated By Blood Banks and Research Centers</h1>
-            </div>
-            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                 <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
-                         src="images/Flags/Qatar.png" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <img src="images/QatarCamp/2024/Certificate/Qatar 2024.jpg">
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
-                         src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <img src="images/UAECamp/2024/Certificate/UAE 2024 (1).jpeg">
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
-                         src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <img src="images/UAECamp/2024/Certificate/UAE 2024 (1).jpeg">
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
-                         src="images/Flags/Qatar.png" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <img src="images/QatarCamp/2025/Certificate/Qatar_04-08-2025.png">
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
-                         src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <img src="images/UAECamp/2024/Certificate/UAE 2024 (2).jpeg">
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
-                         src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <img src="images/UAECamp/2024/Certificate/UAE 2024 (3).jpeg">
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4"
-                         src="images/Flags/UAE.png" style="width: 100px; height: 100px;">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <img src="images/UAECamp/2024/Certificate/UAE 2024 (4).jpeg">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Testimonial End -->
-    <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-white-50 footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-5 col-md-6">
-                    <img src="images/app_logo3.png" alt="Logo"
-                         style="height: 80px; margin-right: 12px;">
-                    <p>
-                        <i class="fa fa-map-marker-alt me-3"></i>
-                       Gausia Ahmadia Monzil,Maizbhandar Darbar Sharif,
-                       Village:Maizbhandar, Post: Bhandar Sharif,
-                       Post Code: 4352, Upazilla: Fatikchari, District: Chittagong,
-                       Bangladesh
-                    </p>
-                    <p>
-                        <i class="fa fa-map-marker-alt me-3"></i>
-                        House: 6/G Road: 04, Zakir Hossain Society
-                        South Khulshi, Chattogram, Bangladesh
-                    </p>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h5 class="text-light mb-4">Contact Us</h5>
-                    <p><i class="fa fa-phone-alt me-3"></i>+8801861 666111</p>
-                    <p><i class="fa fa-envelope me-3"></i>admin@diri.org.bd</p>
-                    <p><i class="fa fa-envelope me-3"></i>tasauf.darulirfan@gmail.com</p>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <h5 class="text-light mb-4">Quick Links</h5>
-                    <a class="btn btn-link" href="">Maizbhandar Darbar Sharif</a>
-                    <a class="btn btn-link" href="">Darul Irfan Research Institure</a>
-                </div>
-                
-            </div>
-        </div>
-        <div class="container-fluid copyright">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a href="#">Maizbhandari Shah Emdadia IT Team </a>, All Right Reserved.
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                       @*  Designed By <a href="https://htmlcodex.com">HTML Codex</a> *@
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-
-
-   
-</body>
-
-</html>
-
-
-@code {
-    string GetHref(string idName) => "#" + idName;
-}
+</div>
+<!-- Testimonial End -->
