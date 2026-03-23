@@ -13,16 +13,36 @@
     }
 
     .volunteer-hero {
-        background: linear-gradient(135deg, rgba(25,62,145,.92), rgba(11,126,179,.82));
-        color: white;
+        background: linear-gradient(135deg, rgba(255, 239, 241, .98) 0%, rgba(255, 247, 244, .97) 42%, rgba(240, 251, 245, .96) 100%);
+        color: #7d1c22;
+        border: 1px solid rgba(254, 0, 2, .10);
         border-radius: 24px;
+        box-shadow: 0 18px 40px rgba(125, 28, 34, .08);
         padding: 3rem 2rem;
         margin-top: 7rem;
         margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .volunteer-hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -8% -35% auto;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0, 153, 73, .16) 0%, rgba(0, 153, 73, 0) 72%);
+        pointer-events: none;
     }
 
     .volunteer-hero h1 {
+        color: #7d1c22;
         scroll-margin-top: 11rem;
+    }
+
+    .volunteer-hero-copy {
+        color: #6d5b5f;
     }
 
     .volunteer-loading {
@@ -127,8 +147,8 @@
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
                     <div class="d-inline-block rounded-pill bg-white text-primary py-1 px-3 mb-3">Volunteer Directory</div>
-                    <h1 class="display-5 text-white mb-3">Meet the volunteers supporting our blood grouping campaigns.</h1>
-                    <p class="mb-0 fs-5">This page highlights the campaign volunteers registered through the official volunteer form and grouped by their service areas across Bangladesh.</p>
+                    <h1 class="display-5 mb-3">Meet the volunteers supporting our blood grouping campaigns.</h1>
+                    <p class="mb-0 fs-5 volunteer-hero-copy">This page highlights the campaign volunteers registered through the official volunteer form and grouped by their service areas across Bangladesh.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
                     <div class="bg-white text-dark rounded-4 p-4 shadow-sm">
