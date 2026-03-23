@@ -1,0 +1,288 @@
+@using Domain.Core
+@using Domain.CampsModels.DBModels
+@using Domain.CampsModels.RespDTO
+@inject Shared.CampsClient.Master.CampaignVolunteerService CampaignVolunteerService
+@inject Shared.CampsClient.Master.AddressService AddressService
+@inject Shared.CampsClient.Master.GenderService GenderService
+@inject Shared.CampsClient.Master.BloodGroupService BloodGroupService
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<RadzenTemplateForm Data="@volunteer" TItem="CampaignVolunteer" Submit="SaveVolunteer">
+    <RadzenStack Gap="1rem">
+        <RadzenRow Gap="12px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Full Name (English) *" />
+                <RadzenTextBox Name="FullNameEn" @bind-Value="volunteer.FullNameEn" Style="width:100%" />
+                <RadzenRequiredValidator Component="FullNameEn" Text="Full name in English is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="নাম (বাংলায়) *" />
+                <RadzenTextBox Name="FullNameBn" @bind-Value="volunteer.FullNameBn" Style="width:100%" />
+                <RadzenRequiredValidator Component="FullNameBn" Text="Full name in Bangla is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Gender *" />
+                <RadzenDropDown Name="GenderId" @bind-Value="volunteer.GenderId" Data="@genders" TextProperty="GenderName" ValueProperty="Id" Style="width:100%" />
+                <RadzenRequiredValidator Component="GenderId" Text="Gender is required." Style="position: relative" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Gap="12px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Father's Name (English) *" />
+                <RadzenTextBox Name="FatherNameEn" @bind-Value="volunteer.FatherNameEn" Style="width:100%" />
+                <RadzenRequiredValidator Component="FatherNameEn" Text="Father's name is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="পিতার নাম (বাংলায়)" />
+                <RadzenTextBox Name="FatherNameBn" @bind-Value="volunteer.FatherNameBn" Style="width:100%" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Blood Group *" />
+                <RadzenDropDown Name="BloodGroupId" @bind-Value="volunteer.BloodGroupId" Data="@bloodGroups" TextProperty="BlodGroupNameEn" ValueProperty="BloodGroupId" Style="width:100%" />
+                <RadzenRequiredValidator Component="BloodGroupId" Text="Blood group is required." Style="position: relative" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Gap="12px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Mother's Name (English) *" />
+                <RadzenTextBox Name="MotherNameEn" @bind-Value="volunteer.MotherNameEn" Style="width:100%" />
+                <RadzenRequiredValidator Component="MotherNameEn" Text="Mother's name is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="মাতার নাম (বাংলায়)" />
+                <RadzenTextBox Name="MotherNameBn" @bind-Value="volunteer.MotherNameBn" Style="width:100%" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Date of Birth *" />
+                <RadzenDatePicker Name="DateOfBirth" @bind-Value="volunteer.DateOfBirth" DateFormat="dd-MM-yyyy" Style="width:100%" />
+                <RadzenRequiredValidator Component="DateOfBirth" Text="Date of birth is required." Style="position: relative" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Gap="12px">
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="Division *" />
+                <RadzenDropDown Name="DivisionId" @bind-Value="volunteer.DivisionId" Data="@divisions" TextProperty="Name" ValueProperty="Id" Change="@OnDivisionChanged" Style="width:100%" />
+                <RadzenRequiredValidator Component="DivisionId" Text="Division is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="Zilla *" />
+                <RadzenDropDown Name="ZillaId" @bind-Value="volunteer.ZillaId" Data="@districts" TextProperty="Name" ValueProperty="Id" Change="@OnDistrictChanged" Style="width:100%" />
+                <RadzenRequiredValidator Component="ZillaId" Text="Zilla is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="Thana *" />
+                <RadzenDropDown Name="ThanaId" @bind-Value="volunteer.ThanaId" Data="@upazilas" TextProperty="Name" ValueProperty="Id" Change="@OnUpazilaChanged" Style="width:100%" />
+                <RadzenRequiredValidator Component="ThanaId" Text="Thana is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="Village *" />
+                <RadzenDropDown Name="VillageId" @bind-Value="volunteer.VillageId" Data="@villages" TextProperty="Name" ValueProperty="Id" Style="width:100%" />
+                <RadzenRequiredValidator Component="VillageId" Text="Village is required." Style="position: relative" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Gap="12px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Post Office *" />
+                <RadzenTextBox Name="PostOfficeName" @bind-Value="volunteer.PostOfficeName" Style="width:100%" />
+                <RadzenRequiredValidator Component="PostOfficeName" Text="Post office is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Phone Number *" />
+                <RadzenTextBox Name="PhoneNumber" @bind-Value="volunteer.PhoneNumber" Style="width:100%" />
+                <RadzenRequiredValidator Component="PhoneNumber" Text="Phone number is required." Style="position: relative" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="WhatsApp Number" />
+                <RadzenTextBox Name="WhatsAppNumber" @bind-Value="volunteer.WhatsAppNumber" Style="width:100%" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Gap="12px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="E-mail" />
+                <RadzenTextBox Name="Email" @bind-Value="volunteer.Email" Style="width:100%" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Unit Committee Name" />
+                <RadzenTextBox Name="UnitCommitteeName" @bind-Value="volunteer.UnitCommitteeName" Style="width:100%" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Photo Location" />
+                <RadzenTextBox Name="PhotoLocation" @bind-Value="volunteer.PhotoLocation" Style="width:100%" Placeholder="https://... or /images/..." />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow Gap="12px">
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Blood Donations Count" />
+                <RadzenNumeric Name="BloodDonationsCount" @bind-Value="volunteer.BloodDonationsCount" Min="0" Style="width:100%" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Grouping Camp Participation Count" />
+                <RadzenNumeric Name="GroupingCampParticipationCount" @bind-Value="volunteer.GroupingCampParticipationCount" Min="0" Style="width:100%" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenLabel Text="Active" />
+                <div class="rz-py-2">
+                    <RadzenSwitch @bind-Value="volunteer.Active" />
+                </div>
+            </RadzenColumn>
+        </RadzenRow>
+
+        <RadzenRow JustifyContent="JustifyContent.End" Gap="8px">
+            <RadzenButton Text="Save" Icon="save" ButtonStyle="ButtonStyle.Success" ButtonType="ButtonType.Submit" />
+            <RadzenButton Text="Cancel" Icon="close" ButtonStyle="ButtonStyle.Light" Click="Cancel" />
+        </RadzenRow>
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    [Parameter] public int VolunteerId { get; set; }
+
+    private CampaignVolunteer volunteer = new()
+    {
+        DateOfBirth = DateTime.Today.AddYears(-18),
+        Active = true
+    };
+
+    private List<Division> divisions = new();
+    private List<District> districts = new();
+    private List<Upazila> upazilas = new();
+    private List<Union> villages = new();
+    private List<Gender> genders = new();
+    private List<BloodGroup> bloodGroups = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMasterDataAsync();
+
+        if (VolunteerId > 0)
+        {
+            var response = await CampaignVolunteerService.GetCampaignVolunteerByIdAsync(VolunteerId);
+            if (response?.RESPONSE_CODE == ConfigClass.SUCCESS && response.Volunteer != null)
+            {
+                volunteer = response.Volunteer;
+                await LoadLocationChainAsync();
+            }
+        }
+    }
+
+    private async Task LoadMasterDataAsync()
+    {
+        var divisionResponse = await AddressService.GetDivisionList();
+        divisions = divisionResponse?.DivisionList ?? new List<Division>();
+
+        var genderResponse = await GenderService.GetGenderList();
+        genders = genderResponse?.GenderList ?? new List<Gender>();
+
+        var bloodGroupResponse = await BloodGroupService.GetBloodGroupList();
+        bloodGroups = bloodGroupResponse?.BloodGroupList ?? new List<BloodGroup>();
+    }
+
+    private async Task LoadLocationChainAsync()
+    {
+        if (volunteer.DivisionId > 0)
+        {
+            districts = (await AddressService.GetZillaList(volunteer.DivisionId)).DistrictList ?? new List<District>();
+        }
+
+        if (volunteer.ZillaId > 0)
+        {
+            upazilas = (await AddressService.GetThanaList(volunteer.ZillaId)).UpazilaList ?? new List<Upazila>();
+        }
+
+        if (volunteer.ThanaId > 0)
+        {
+            villages = (await AddressService.GetVillageList(volunteer.ThanaId)).UnionList ?? new List<Union>();
+        }
+    }
+
+    private async Task OnDivisionChanged(object? value)
+    {
+        volunteer.DivisionId = Convert.ToInt32(value);
+        volunteer.ZillaId = 0;
+        volunteer.ThanaId = 0;
+        volunteer.VillageId = 0;
+        districts = (await AddressService.GetZillaList(volunteer.DivisionId)).DistrictList ?? new List<District>();
+        upazilas = new List<Upazila>();
+        villages = new List<Union>();
+    }
+
+    private async Task OnDistrictChanged(object? value)
+    {
+        volunteer.ZillaId = Convert.ToInt32(value);
+        volunteer.ThanaId = 0;
+        volunteer.VillageId = 0;
+        upazilas = (await AddressService.GetThanaList(volunteer.ZillaId)).UpazilaList ?? new List<Upazila>();
+        villages = new List<Union>();
+    }
+
+    private async Task OnUpazilaChanged(object? value)
+    {
+        volunteer.ThanaId = Convert.ToInt32(value);
+        volunteer.VillageId = 0;
+        villages = (await AddressService.GetVillageList(volunteer.ThanaId)).UnionList ?? new List<Union>();
+    }
+
+    private async Task SaveVolunteer(CampaignVolunteer model)
+    {
+        if (string.IsNullOrWhiteSpace(model.FullNameEn) ||
+            string.IsNullOrWhiteSpace(model.FullNameBn) ||
+            string.IsNullOrWhiteSpace(model.FatherNameEn) ||
+            string.IsNullOrWhiteSpace(model.MotherNameEn) ||
+            string.IsNullOrWhiteSpace(model.PostOfficeName) ||
+            string.IsNullOrWhiteSpace(model.PhoneNumber) ||
+            model.GenderId <= 0 ||
+            model.BloodGroupId <= 0 ||
+            model.DivisionId <= 0 ||
+            model.ZillaId <= 0 ||
+            model.ThanaId <= 0 ||
+            model.VillageId <= 0 ||
+            model.DateOfBirth == default)
+        {
+            NotificationService.Notify(NotificationSeverity.Warning, "Validation", "Please fill in all mandatory fields marked with *.");
+            return;
+        }
+
+        bool? confirmed = await DialogService.Confirm(
+            VolunteerId > 0 ? "Are you sure you want to update this volunteer?" : "Are you sure you want to create this volunteer?",
+            VolunteerId > 0 ? "Confirm update" : "Confirm create",
+            new ConfirmOptions { OkButtonText = "Yes", CancelButtonText = "No" });
+
+        if (confirmed != true)
+        {
+            return;
+        }
+
+        try
+        {
+            var response = VolunteerId > 0
+                ? await CampaignVolunteerService.UpdateCampaignVolunteerAsync(model)
+                : await CampaignVolunteerService.SaveCampaignVolunteerAsync(model);
+
+            if (response?.RESPONSE_CODE == ConfigClass.SUCCESS)
+            {
+                NotificationService.Notify(NotificationSeverity.Success, "Success", VolunteerId > 0 ? "Volunteer updated successfully." : "Volunteer created successfully.");
+                DialogService.Close(true);
+            }
+            else
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Save failed", response?.RESPONSE_DESCRPTION ?? "Unable to save volunteer.");
+            }
+        }
+        catch
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Save failed", "Unable to save volunteer.");
+        }
+    }
+
+    private void Cancel()
+    {
+        DialogService.Close(false);
+    }
+}

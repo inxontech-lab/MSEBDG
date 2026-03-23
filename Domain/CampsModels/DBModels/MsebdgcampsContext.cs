@@ -41,6 +41,8 @@ public partial class MsebdgcampsContext : DbContext
 
     public virtual DbSet<CampType> CampTypes { get; set; }
 
+    public virtual DbSet<CampaignVolunteer> CampaignVolunteers { get; set; }
+
     public virtual DbSet<CountryMst> CountryMsts { get; set; }
 
     public virtual DbSet<DeclarationMst> DeclarationMsts { get; set; }
@@ -259,6 +261,33 @@ public partial class MsebdgcampsContext : DbContext
             entity.ToTable("CampType", "master");
 
             entity.Property(e => e.CampTypeName).HasMaxLength(50);
+        });
+
+
+        modelBuilder.Entity<CampaignVolunteer>(entity =>
+        {
+            entity.HasKey(e => e.VolunteerId).HasName("PK_CampaignVolunteer");
+
+            entity.ToTable("CampaignVolunteer", "GroupCamp");
+
+            entity.Property(e => e.Active).HasDefaultValue(true);
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.DateOfBirth).HasColumnType("date");
+            entity.Property(e => e.Email).HasMaxLength(120);
+            entity.Property(e => e.FatherNameBn).HasMaxLength(150);
+            entity.Property(e => e.FatherNameEn).HasMaxLength(150);
+            entity.Property(e => e.FullNameBn).HasMaxLength(150);
+            entity.Property(e => e.FullNameEn).HasMaxLength(150);
+            entity.Property(e => e.MotherNameBn).HasMaxLength(150);
+            entity.Property(e => e.MotherNameEn).HasMaxLength(150);
+            entity.Property(e => e.PhoneNumber).HasMaxLength(20);
+            entity.Property(e => e.PhotoLocation).HasMaxLength(300);
+            entity.Property(e => e.PostOfficeName).HasMaxLength(120);
+            entity.Property(e => e.UnitCommitteeName).HasMaxLength(200);
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
+            entity.Property(e => e.WhatsAppNumber).HasMaxLength(20);
         });
 
         modelBuilder.Entity<CountryMst>(entity =>

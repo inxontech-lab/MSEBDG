@@ -34,6 +34,8 @@ namespace DataAccess.CampsRepo
         private FemaleQuestionsRespDTO _FemaleQuestionsRespDTO;
         private CommonRespDTO _CommonRespDTO;
         private BeneficiaryInfoRespDTO _BeneficiaryInfoRespDTO;
+        private CampaignVolunteerListRespDTO _CampaignVolunteerListRespDTO;
+        private CampaignVolunteerRespDTO _CampaignVolunteerRespDTO;
 
         public GroupingCampContextDataRepo(MsebdgcampsContext MsebdgcampsContext)
         {
@@ -43,6 +45,51 @@ namespace DataAccess.CampsRepo
         public void Dispose()
         {
             //throw new NotImplementedException();
+        }
+
+        private IQueryable<CampaignVolunteerDto> BuildCampaignVolunteerQuery()
+        {
+            return from volunteer in _MsebdgcampsContext.CampaignVolunteers
+                   join gender in _MsebdgcampsContext.Genders on volunteer.GenderId equals gender.Id
+                   join bloodGroup in _MsebdgcampsContext.BloodGroups on volunteer.BloodGroupId equals bloodGroup.BloodGroupId
+                   join division in _MsebdgcampsContext.Divisions on volunteer.DivisionId equals division.Id
+                   join district in _MsebdgcampsContext.Districts on volunteer.ZillaId equals district.Id
+                   join upazila in _MsebdgcampsContext.Upazilas on volunteer.ThanaId equals upazila.Id
+                   join union in _MsebdgcampsContext.Unions on volunteer.VillageId equals union.Id
+                   select new CampaignVolunteerDto
+                   {
+                       VolunteerId = volunteer.VolunteerId,
+                       FullNameEn = volunteer.FullNameEn,
+                       FullNameBn = volunteer.FullNameBn,
+                       FatherNameEn = volunteer.FatherNameEn,
+                       FatherNameBn = volunteer.FatherNameBn,
+                       MotherNameEn = volunteer.MotherNameEn,
+                       MotherNameBn = volunteer.MotherNameBn,
+                       GenderId = volunteer.GenderId,
+                       GenderName = gender.GenderName ?? string.Empty,
+                       BloodGroupId = volunteer.BloodGroupId,
+                       BloodGroupName = bloodGroup.BlodGroupNameEn ?? string.Empty,
+                       DivisionId = volunteer.DivisionId,
+                       DivisionName = division.Name,
+                       ZillaId = volunteer.ZillaId,
+                       ZillaName = district.Name,
+                       ThanaId = volunteer.ThanaId,
+                       ThanaName = upazila.Name,
+                       VillageId = volunteer.VillageId,
+                       VillageName = union.Name,
+                       PostOfficeName = volunteer.PostOfficeName,
+                       PhoneNumber = volunteer.PhoneNumber,
+                       WhatsAppNumber = volunteer.WhatsAppNumber,
+                       Email = volunteer.Email,
+                       DateOfBirth = volunteer.DateOfBirth,
+                       UnitCommitteeName = volunteer.UnitCommitteeName,
+                       BloodDonationsCount = volunteer.BloodDonationsCount,
+                       GroupingCampParticipationCount = volunteer.GroupingCampParticipationCount,
+                       PhotoLocation = volunteer.PhotoLocation,
+                       Active = volunteer.Active,
+                       CreatedDate = volunteer.CreatedDate,
+                       UpdatedDate = volunteer.UpdatedDate
+                   };
         }
 
         public async Task<BeneficiaryInfoRespDTO> GetBeneficiaryByMobile(string MobileNumber)
@@ -524,6 +571,208 @@ namespace DataAccess.CampsRepo
             }
 
             return _CampDetailsRespDTO;
+        }
+
+        public async Task<CampaignVolunteerListRespDTO> GetCampaignVolunteerListAsync(bool activeOnly = false)
+        {
+            _CampaignVolunteerListRespDTO = new();
+            try
+            {
+                var query = BuildCampaignVolunteerQuery();
+
+                if (activeOnly)
+                {
+                    query = query.Where(x => x.Active);
+                }
+
+                var volunteers = await query
+                    .OrderBy(x => x.FullNameEn)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.SUCCESS;
+                _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = ConfigClass.SUCCESS_MESSAGE;
+                _CampaignVolunteerListRespDTO.VolunteerList = volunteers;
+            }
+            catch (Exception ex)
+            {
+                _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.FAILURE;
+                _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = $"{ConfigClass.FAILURE_MESSAGE} - {ex.Message}";
+                _CampaignVolunteerListRespDTO.VolunteerList = null;
+            }
+
+            return _CampaignVolunteerListRespDTO;
+        }
+
+        public async Task<CampaignVolunteerRespDTO> GetCampaignVolunteerByIdAsync(int volunteerId)
+        {
+            _CampaignVolunteerRespDTO = new();
+            try
+            {
+                var volunteer = await _MsebdgcampsContext.CampaignVolunteers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.VolunteerId == volunteerId);
+
+                if (volunteer == null)
+                {
+                    _CampaignVolunteerRespDTO.RESPONSE_CODE = ConfigClass.DATA_NOT_FOUND;
+                    _CampaignVolunteerRespDTO.RESPONSE_DESCRPTION = ConfigClass.DATA_NOT_FOUND_MESSAGE;
+                    _CampaignVolunteerRespDTO.Volunteer = null;
+                }
+                else
+                {
+                    _CampaignVolunteerRespDTO.RESPONSE_CODE = ConfigClass.SUCCESS;
+                    _CampaignVolunteerRespDTO.RESPONSE_DESCRPTION = ConfigClass.SUCCESS_MESSAGE;
+                    _CampaignVolunteerRespDTO.Volunteer = volunteer;
+                }
+            }
+            catch (Exception ex)
+            {
+                _CampaignVolunteerRespDTO.RESPONSE_CODE = ConfigClass.FAILURE;
+                _CampaignVolunteerRespDTO.RESPONSE_DESCRPTION = $"{ConfigClass.FAILURE_MESSAGE} - {ex.Message}";
+                _CampaignVolunteerRespDTO.Volunteer = null;
+            }
+
+            return _CampaignVolunteerRespDTO;
+        }
+
+        public async Task<CampaignVolunteerListRespDTO> SaveCampaignVolunteerAsync(CampaignVolunteer volunteer)
+        {
+            _CampaignVolunteerListRespDTO = new();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(volunteer.FullNameEn) ||
+                    string.IsNullOrWhiteSpace(volunteer.FullNameBn) ||
+                    string.IsNullOrWhiteSpace(volunteer.FatherNameEn) ||
+                    string.IsNullOrWhiteSpace(volunteer.MotherNameEn) ||
+                    string.IsNullOrWhiteSpace(volunteer.PostOfficeName) ||
+                    string.IsNullOrWhiteSpace(volunteer.PhoneNumber) ||
+                    volunteer.GenderId <= 0 ||
+                    volunteer.BloodGroupId <= 0 ||
+                    volunteer.DivisionId <= 0 ||
+                    volunteer.ZillaId <= 0 ||
+                    volunteer.ThanaId <= 0 ||
+                    volunteer.VillageId <= 0)
+                {
+                    _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.MANDATORY_FIELD_MISSING;
+                    _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = ConfigClass.MANDATORY_FIELD_MISSING_MESSAGE;
+                    _CampaignVolunteerListRespDTO.VolunteerList = null;
+                    return _CampaignVolunteerListRespDTO;
+                }
+
+                volunteer.CreatedDate = DateTime.Now;
+                volunteer.UpdatedDate = null;
+                _MsebdgcampsContext.CampaignVolunteers.Add(volunteer);
+                await _MsebdgcampsContext.SaveChangesAsync();
+                return await GetCampaignVolunteerListAsync();
+            }
+            catch (Exception ex)
+            {
+                _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.FAILURE;
+                _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = $"{ConfigClass.FAILURE_MESSAGE} - {ex.Message}";
+                _CampaignVolunteerListRespDTO.VolunteerList = null;
+                return _CampaignVolunteerListRespDTO;
+            }
+        }
+
+        public async Task<CampaignVolunteerListRespDTO> UpdateCampaignVolunteerAsync(CampaignVolunteer volunteer)
+        {
+            _CampaignVolunteerListRespDTO = new();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(volunteer.FullNameEn) ||
+                    string.IsNullOrWhiteSpace(volunteer.FullNameBn) ||
+                    string.IsNullOrWhiteSpace(volunteer.FatherNameEn) ||
+                    string.IsNullOrWhiteSpace(volunteer.MotherNameEn) ||
+                    string.IsNullOrWhiteSpace(volunteer.PostOfficeName) ||
+                    string.IsNullOrWhiteSpace(volunteer.PhoneNumber) ||
+                    volunteer.GenderId <= 0 ||
+                    volunteer.BloodGroupId <= 0 ||
+                    volunteer.DivisionId <= 0 ||
+                    volunteer.ZillaId <= 0 ||
+                    volunteer.ThanaId <= 0 ||
+                    volunteer.VillageId <= 0)
+                {
+                    _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.MANDATORY_FIELD_MISSING;
+                    _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = ConfigClass.MANDATORY_FIELD_MISSING_MESSAGE;
+                    _CampaignVolunteerListRespDTO.VolunteerList = null;
+                    return _CampaignVolunteerListRespDTO;
+                }
+
+                var existingVolunteer = await _MsebdgcampsContext.CampaignVolunteers
+                    .FirstOrDefaultAsync(x => x.VolunteerId == volunteer.VolunteerId);
+
+                if (existingVolunteer == null)
+                {
+                    _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.NOTHING_FOUND_TO_UPDATE;
+                    _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = ConfigClass.NOTHING_FOUND_TO_UPDATE_MESSAGE;
+                    _CampaignVolunteerListRespDTO.VolunteerList = null;
+                    return _CampaignVolunteerListRespDTO;
+                }
+
+                existingVolunteer.FullNameEn = volunteer.FullNameEn;
+                existingVolunteer.FullNameBn = volunteer.FullNameBn;
+                existingVolunteer.FatherNameEn = volunteer.FatherNameEn;
+                existingVolunteer.FatherNameBn = volunteer.FatherNameBn;
+                existingVolunteer.MotherNameEn = volunteer.MotherNameEn;
+                existingVolunteer.MotherNameBn = volunteer.MotherNameBn;
+                existingVolunteer.GenderId = volunteer.GenderId;
+                existingVolunteer.BloodGroupId = volunteer.BloodGroupId;
+                existingVolunteer.DivisionId = volunteer.DivisionId;
+                existingVolunteer.ZillaId = volunteer.ZillaId;
+                existingVolunteer.ThanaId = volunteer.ThanaId;
+                existingVolunteer.VillageId = volunteer.VillageId;
+                existingVolunteer.PostOfficeName = volunteer.PostOfficeName;
+                existingVolunteer.PhoneNumber = volunteer.PhoneNumber;
+                existingVolunteer.WhatsAppNumber = volunteer.WhatsAppNumber;
+                existingVolunteer.Email = volunteer.Email;
+                existingVolunteer.DateOfBirth = volunteer.DateOfBirth;
+                existingVolunteer.UnitCommitteeName = volunteer.UnitCommitteeName;
+                existingVolunteer.BloodDonationsCount = volunteer.BloodDonationsCount;
+                existingVolunteer.GroupingCampParticipationCount = volunteer.GroupingCampParticipationCount;
+                existingVolunteer.PhotoLocation = volunteer.PhotoLocation;
+                existingVolunteer.Active = volunteer.Active;
+                existingVolunteer.UpdatedDate = DateTime.Now;
+
+                await _MsebdgcampsContext.SaveChangesAsync();
+                return await GetCampaignVolunteerListAsync();
+            }
+            catch (Exception ex)
+            {
+                _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.FAILURE;
+                _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = $"{ConfigClass.FAILURE_MESSAGE} - {ex.Message}";
+                _CampaignVolunteerListRespDTO.VolunteerList = null;
+                return _CampaignVolunteerListRespDTO;
+            }
+        }
+
+        public async Task<CampaignVolunteerListRespDTO> DeleteCampaignVolunteerAsync(int volunteerId)
+        {
+            _CampaignVolunteerListRespDTO = new();
+            try
+            {
+                var volunteer = await _MsebdgcampsContext.CampaignVolunteers
+                    .FirstOrDefaultAsync(x => x.VolunteerId == volunteerId);
+
+                if (volunteer == null)
+                {
+                    _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.DATA_NOT_FOUND;
+                    _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = ConfigClass.DATA_NOT_FOUND_MESSAGE;
+                    _CampaignVolunteerListRespDTO.VolunteerList = null;
+                    return _CampaignVolunteerListRespDTO;
+                }
+
+                _MsebdgcampsContext.CampaignVolunteers.Remove(volunteer);
+                await _MsebdgcampsContext.SaveChangesAsync();
+                return await GetCampaignVolunteerListAsync();
+            }
+            catch (Exception ex)
+            {
+                _CampaignVolunteerListRespDTO.RESPONSE_CODE = ConfigClass.FAILURE;
+                _CampaignVolunteerListRespDTO.RESPONSE_DESCRPTION = $"{ConfigClass.FAILURE_MESSAGE} - {ex.Message}";
+                _CampaignVolunteerListRespDTO.VolunteerList = null;
+                return _CampaignVolunteerListRespDTO;
+            }
         }
 
         public DivisionListRespDTO GetDivisionList()

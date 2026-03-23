@@ -1,0 +1,59 @@
+@page "/campaign-volunteers"
+@inherits MSEBDGCP.Components.Pages.Camps.CampaignVolunteers
+
+<PageTitle>Campaign Volunteers</PageTitle>
+
+<RadzenCard Style="border-radius:20px; box-shadow: 0 0 8px rgba(0,0,0,0.12); margin-bottom:20px;">
+    <RadzenRow JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Gap="12px">
+        <RadzenColumn Size="12" SizeMD="8">
+            <RadzenText Text="Campaign Volunteers" TextStyle="TextStyle.H5" Style="font-weight:700; color:#193e91;" />
+            <RadzenText Text="Manage the volunteer registry collected from the campaign volunteer form." TextStyle="TextStyle.Body2" Style="color:#6c757d;" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4" Style="text-align:right;">
+            <RadzenButton Text="Create New" Icon="add_circle" Click="OpenCreateDialog" Style="background:#193e91;" />
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenCard>
+
+<RadzenCard Style="border-radius:20px; box-shadow: 0 0 8px rgba(0,0,0,0.10);">
+    <RadzenDataGrid @ref="volunteerGrid" Data="@volunteers" TItem="Domain.CampsModels.RespDTO.CampaignVolunteerDto"
+                    AllowFiltering="true" AllowSorting="true" AllowPaging="true" PageSize="10"
+                    FilterMode="FilterMode.Advanced" Responsive="true" EmptyText="No volunteers found."
+                    Class="rz-border-radius-2xl">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.CampsModels.RespDTO.CampaignVolunteerDto" Title="Photo" Width="90px" Filterable="false" Sortable="false">
+                <Template Context="item">
+                    <img src="@GetPhoto(item.PhotoLocation)" alt="@item.FullNameEn" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #e7ecf5;" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="FullNameEn" Title="Name" />
+            <RadzenDataGridColumn Property="BloodGroupName" Title="Blood Group" Width="120px" />
+            <RadzenDataGridColumn Property="GenderName" Title="Gender" Width="110px" />
+            <RadzenDataGridColumn Property="PhoneNumber" Title="Phone" Width="130px" />
+            <RadzenDataGridColumn Property="VillageName" Title="Village" Width="140px" />
+            <RadzenDataGridColumn Property="ThanaName" Title="Thana" Width="140px" />
+            <RadzenDataGridColumn Property="ZillaName" Title="Zilla" Width="140px" />
+            <RadzenDataGridColumn Property="DivisionName" Title="Division" Width="140px" />
+            <RadzenDataGridColumn Property="BloodDonationsCount" Title="Donations" Width="110px" />
+            <RadzenDataGridColumn Property="GroupingCampParticipationCount" Title="Camps" Width="90px" />
+            <RadzenDataGridColumn Title="Status" Width="100px">
+                <Template Context="item">
+                    @if (item.Active)
+                    {
+                        <RadzenBadge Text="Active" BadgeStyle="BadgeStyle.Success" />
+                    }
+                    else
+                    {
+                        <RadzenBadge Text="Inactive" BadgeStyle="BadgeStyle.Danger" />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="Actions" Width="120px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                <Template Context="item">
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Click="@(args => OpenEditDialog(item.VolunteerId))" Style="margin-right:6px; color:#193e91;" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Shade="Shade.Lighter" Click="@(args => DeleteVolunteer(item.VolunteerId, item.FullNameEn))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
