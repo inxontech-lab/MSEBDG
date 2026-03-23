@@ -99,6 +99,18 @@
         z-index: 1;
     }
 
+    .status-profile-badge-active {
+        background: rgba(25, 135, 84, .14);
+        border-color: rgba(25, 135, 84, .28);
+        color: #146c43;
+    }
+
+    .status-profile-badge-inactive {
+        background: rgba(220, 53, 69, .14);
+        border-color: rgba(220, 53, 69, .28);
+        color: #b02a37;
+    }
+
     .detail-card {
         border: 1px solid rgba(49, 91, 75, .08);
         border-radius: 22px;
@@ -189,7 +201,7 @@
                             <div class="d-flex flex-wrap gap-2 mb-3">
                                 <span class="profile-badge"><i class="fa fa-tint"></i>@volunteer.BloodGroupName</span>
                                 <span class="profile-badge"><i class="fa fa-user"></i>@volunteer.GenderName</span>
-                                <span class="profile-badge"><i class="fa fa-check-circle"></i>@(volunteer.Active ? "Active volunteer" : "Inactive volunteer")</span>
+                                <span class="profile-badge status-profile-badge @(volunteer.Active ? "status-profile-badge-active" : "status-profile-badge-inactive")"><i class="fa fa-check-circle"></i>@(volunteer.Active ? "Active volunteer" : "Inactive volunteer")</span>
                             </div>
                             <p class="mb-0 opacity-75">This profile contains the volunteer's photo, personal details, campaign activity, and contact information from the official registration record.</p>
                         </div>
