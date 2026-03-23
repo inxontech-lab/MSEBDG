@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Domain.CampsModels.DBModels;
 
@@ -55,7 +56,9 @@ public partial class CampaignVolunteer
 
     public DateTime? UpdatedDate { get; set; }
 
-    public virtual BloodGroup BloodGroup { get; set; } = null!;
+    [JsonIgnore]
+    public virtual BloodGroup? BloodGroup { get; set; }
 
-    public virtual Gender Gender { get; set; } = null!;
+    [JsonIgnore]
+    public virtual Gender? Gender { get; set; }
 }
