@@ -1,8 +1,6 @@
 ﻿@* @page "/blood-group-update" *@
 
-@inherits ComponentBase
-
-<RadzenTemplateForm TItem="Domain.CampsModels.DBModels.Beneficiary">
+<RadzenTemplateForm Data="@_Beneficiary" TItem="Domain.CampsModels.DBModels.Beneficiary">
     <RadzenRow>
         <RadzenColumn>
             <RadzenStack>
